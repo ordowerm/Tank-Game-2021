@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea6a7e5d2df22744da07209f38199687, type: 3}
+  m_Name: Default Gamepad
+  m_EditorClassIdentifier: 
+  debug: 0
+  roll: 335
+  switchWeaponRight: 0
+  switchWeaponLeft: 0
+  switchSubRight: 0
+  switchSubLeft: 0
+  shotbutton: 0
+  subweapon: 0
+  moveAxisX: haxis
+  moveAxisY: vaxis
+  altAxisX: althoriz
+  altAxisY: altvert
+  aimAxisX: aimhoriz
+  aimAxisY: aimvert
+  shottrigger: righttrig
+  rolltrigger: 
+  subtrigger: 
+  triggerDeadzone: 0.75
+  deadzoneMove: 0.3
+  deadzoneAim: 0.2

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0872ecb7679fc243819a855f944c110, type: 3}
+  m_Name: CircleBullet
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 5116123242225802251, guid: 8dbb9016d9aa5c34484f8e417b221f91, type: 3}
+  trailParticleSprite: {fileID: 0}
+  hitParticleSprite: {fileID: 0}
+  element: {fileID: 11400000, guid: f92bad4f4127bb141816afcf38c767c9, type: 2}
+  EnemyBullet: 0
+  lifespan: 0.5
+  speed: 30

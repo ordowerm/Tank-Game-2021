@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6d4aa9bb4b3c4f4aa21ce9849fb8849, type: 3}
+  m_Name: HairTops
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 21300000, guid: 57f0e06f1cd41814896c95da751cb177, type: 3}
+  - {fileID: 21300000, guid: cb8c00c79a637e941a2d51b7c16028b3, type: 3}
+  - {fileID: 21300000, guid: bf03c1dd210c036479df006b39ad9d68, type: 3}
+  - {fileID: 21300000, guid: dfd47cfe543c71a4a9d6c6f38689b028, type: 3}
+  - {fileID: 21300000, guid: 2d0f792bdc0bb814b811b0b3a94dcd00, type: 3}
+  - {fileID: 21300000, guid: 7ac0ae89a7d0ac9459d9ba84060fb7bc, type: 3}
+  - {fileID: 21300000, guid: fc1ff7c85c0747d46b9c8f22fd93f2ab, type: 3}
+  - {fileID: 21300000, guid: 270b08f0b61c8e14ca02aa50e634cd65, type: 3}
+  - {fileID: 21300000, guid: 510afdd9e6f25024cb4af0855c041483, type: 3}
+  - {fileID: 21300000, guid: 8322f14e61f524c4f93a1a86fc784e8e, type: 3}
+  - {fileID: 21300000, guid: a316bd85fa5a877478e6f0e7568053c0, type: 3}
+  - {fileID: 21300000, guid: 54746623b76e9b4479d26971cd7edfa6, type: 3}
+  - {fileID: 21300000, guid: 2c2941ceda6a93a4095a5ee08d10f3e2, type: 3}
