@@ -20,6 +20,7 @@ MonoBehaviour:
   switchSubLeft: 0
   shotbutton: 0
   subweapon: 0
+  lockon: 334
   moveAxisX: haxis
   moveAxisY: vaxis
   altAxisX: althoriz
@@ -29,6 +30,7 @@ MonoBehaviour:
   shottrigger: righttrig
   rolltrigger: 
   subtrigger: 
+  locktrigger: lefttrig
   triggerDeadzone: 0.75
   deadzoneMove: 0.3
   deadzoneAim: 0.2

@@ -20,6 +20,7 @@ public class GamepadConfig : ScriptableObject, IControllerInput
     public KeyCode switchSubLeft;
     public KeyCode shotbutton;
     public KeyCode subweapon;
+    public KeyCode lockon;
     public string moveAxisX; //default to left analog
     public string moveAxisY;
     public string altAxisX; //for dpad control
@@ -29,6 +30,7 @@ public class GamepadConfig : ScriptableObject, IControllerInput
     public string shottrigger; //axis for shooting
     public string rolltrigger;
     public string subtrigger;
+    public string locktrigger;
     public float triggerDeadzone; //deadzone for trigger
     public float deadzoneMove;
     public float deadzoneAim;
@@ -149,6 +151,10 @@ public class GamepadConfig : ScriptableObject, IControllerInput
             case ButtonID.SWITCH_SUB_RIGHT:
             default:
                 key = switchSubRight;
+                break;
+            case ButtonID.LOCK_ON:
+                key = lockon;
+                result = TriggerHelper(locktrigger, buttonUp);
                 break;
         }
         if (!result) { result = bf(key); } //if the result is still false (i.e. trigger input hasn't been converted to button input), then check key

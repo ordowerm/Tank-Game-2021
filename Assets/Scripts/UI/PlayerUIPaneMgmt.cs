@@ -135,7 +135,7 @@ public class PlayerUIPaneMgmt : MonoBehaviour
         
         //Convert score to string and then add some commas
         string scoreT = score.ToString();
-        Debug.Log(scoreT);
+        //Debug.Log(scoreT);
         string newtext = ""; //string to build. Once for loop is completed, set ScoreText string.
         for (int i = 0; i<scoreT.Length; i++)
         {

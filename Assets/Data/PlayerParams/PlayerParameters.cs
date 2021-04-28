@@ -14,12 +14,21 @@ public class PlayerParameters : ScriptableObject
     //Aiming parameters
     /*
      * Controller lock on is accomplished by casting rays from a player's gun to all enemies on screen.
-     * It then sorts the enemies, first by angle error, then by distance, to determine which enemy to lock onto first.
+     * It then sorts the enemies, using a heuristic function approximating the best enemy to aim at first.
+     * The "score" from the heuristic considers enemy distance from player + how far away the enemy is from the player's aiming angle.
+     * The degree to which these two variables are weighted are defined in these player parameters.
      * 
      * maxAngleError -> this value determines the maximum angle error, between the angle the player's gun is facing and a given enemy position, before the game says, "You can't lock onto that enemy."
      * lockOnCancelTime-> if the lock-on button is released and then tapped again within lockOnCancelTime seconds, then instead of cancelling the lock-on, the focus will advance to the next-closest enemy
+     *
+     * The aiming heuristic weights are used when determining the priorities of which enemies to lock onto.
+     *
      */
     public float maxAngleError;
-    public float lockOnCancelTime; 
+    public float maxEnemyDistanceForLockOn;
+    public float lockOnCancelTime;
+    public float lockOnResetTime; //if player stops locking on and then waits for a bit, lock on to nearest enemy again
+    public float aimingHeuristicAngleErrorWeight;
+    public float aimingHeuristicEnemyDistanceWeight;
 
 }

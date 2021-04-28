@@ -58,3 +58,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   rolldelay: 0.1
+  maxAngleError: 30
+  maxEnemyDistanceForLockOn: 15
+  lockOnCancelTime: 0
+  lockOnResetTime: 0.25
+  aimingHeuristicAngleErrorWeight: 0.16666667
+  aimingHeuristicEnemyDistanceWeight: 0.5

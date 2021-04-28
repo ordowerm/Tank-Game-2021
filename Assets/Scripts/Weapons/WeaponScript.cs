@@ -8,10 +8,16 @@ public class WeaponScript : MonoBehaviour
     public GameObject reticle;
     public GameObject bullet1;
     public GameObject bullet2;
+    public float defaultReticleDistance; //distance from gun for reticle to spawn when in gamepad mode
     float shotTimer;
     float chargeTimer;
     bool pressed;
     bool useGamepad;
+
+    //have the size of the reticle change when locked on
+    public float reticleMinScale; //size when not locked on
+    public float reticleMaxScale; //size when locked on
+
 
     protected void Awake()
     {
@@ -89,6 +95,22 @@ public class WeaponScript : MonoBehaviour
     }
 
     
+    //Sets reticle scale and position when locked on
+    public void SetReticleTarget(GameObject t)
+    {
+        reticle.transform.SetParent(t.transform);
+        reticle.transform.localPosition = new Vector2(0,0);
+        reticle.transform.localScale = new Vector3(reticleMaxScale, reticleMaxScale, 1);
+    }
+    public void ResetReticle()
+    {
+        reticle.transform.position = this.transform.position;
+        reticle.transform.SetParent(this.transform);
+        reticle.transform.localPosition = new Vector2(defaultReticleDistance,0);
+        reticle.transform.localScale = new Vector3(reticleMinScale, reticleMinScale, 1);
+
+    }
+
     protected void Update()
     {
         //advance shot timer

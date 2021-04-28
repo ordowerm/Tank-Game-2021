@@ -9,7 +9,7 @@ public class BulletMovement : GameStateMachine
 {
     protected bool started; //if set to false, don't use update methods.
     public void StartBullet() {
-        Debug.Log("Started.");    
+        //Debug.Log("Started.");    
         started = true; 
     } //call in cannon/weapon script after inputting transform parameters
 
