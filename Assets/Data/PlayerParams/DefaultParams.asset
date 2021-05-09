@@ -61,6 +61,6 @@ MonoBehaviour:
   maxAngleError: 30
   maxEnemyDistanceForLockOn: 15
   lockOnCancelTime: 0
-  lockOnResetTime: 0.25
-  aimingHeuristicAngleErrorWeight: 0.16666667
-  aimingHeuristicEnemyDistanceWeight: 0.5
+  lockOnResetTime: 0.15
+  aimingHeuristicAngleErrorWeight: 0.06666667
+  aimingHeuristicEnemyDistanceWeight: 0.1

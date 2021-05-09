@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerRollState : InputState
+public class PlayerRollState : PlayerState
 {
     protected Rigidbody2D rb;
     protected float rolltimer;

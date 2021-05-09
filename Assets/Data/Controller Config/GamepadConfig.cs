@@ -21,6 +21,9 @@ public class GamepadConfig : ScriptableObject, IControllerInput
     public KeyCode shotbutton;
     public KeyCode subweapon;
     public KeyCode lockon;
+    public KeyCode cancelLockOn;
+    public KeyCode switchTargetRight;
+    public KeyCode switchTargetLeft;
     public string moveAxisX; //default to left analog
     public string moveAxisY;
     public string altAxisX; //for dpad control
@@ -31,9 +34,17 @@ public class GamepadConfig : ScriptableObject, IControllerInput
     public string rolltrigger;
     public string subtrigger;
     public string locktrigger;
+    public string unlockTrigger;
     public float triggerDeadzone; //deadzone for trigger
     public float deadzoneMove;
     public float deadzoneAim;
+    public float deadzoneSwitchTarget;
+    public LockOnType lockType;
+    public string switchTargetAxis; //axis for toggling enemies
+    public KeyCode weapon0;
+    public KeyCode weapon1;
+    public KeyCode weapon2;
+    public KeyCode weapon3;
 
     //Return normalized aiming vector. Use arctan to convert to angle when calculating aiming direction.
     public Vector2 GetAim()
@@ -77,10 +88,11 @@ public class GamepadConfig : ScriptableObject, IControllerInput
             }
         }
 
+        /*
         if (debug)
         {
-            Debug.Log("Movement axes: " + new Vector2(x, y));
-        }
+            //Debug.Log("Movement axes: " + new Vector2(x, y));
+        }*/
 
         //Return vector with maximum magnitude = 1. Smaller vectors are allowed using analog stick.
         Vector2 returnVector = new Vector2(x,y);
@@ -90,6 +102,29 @@ public class GamepadConfig : ScriptableObject, IControllerInput
         }
         
         return returnVector;
+    }
+
+    //Return whether locked on enemy should switch
+    public int GetSwitchAxis()
+    {
+        int result = 0;
+        float magnitude = Mathf.Abs(Input.GetAxis(switchTargetAxis));
+        if (
+            GetButtonDown(ButtonID.SWITCH_TARGET_RIGHT) ||
+            (Input.GetAxis(switchTargetAxis) > 0 && (magnitude >= deadzoneSwitchTarget))
+            )
+        {
+            result++;
+        }
+        if (
+            GetButtonDown(ButtonID.SWITCH_TARGET_LEFT) ||
+            (Input.GetAxis(switchTargetAxis) < 0 && (magnitude >= deadzoneSwitchTarget))
+            )
+        {
+            result--;
+        }
+        //Debug.Log("Axis for switching targets: " + result);
+        return result;
     }
 
     //Helper functions for buttons. 
@@ -156,6 +191,23 @@ public class GamepadConfig : ScriptableObject, IControllerInput
                 key = lockon;
                 result = TriggerHelper(locktrigger, buttonUp);
                 break;
+            case ButtonID.CANCEL_LOCK_ON:
+                key = cancelLockOn;
+                result = TriggerHelper(unlockTrigger, buttonUp);
+                break;
+            case ButtonID.WEAPON0:
+                key = weapon0;
+                break;
+            case ButtonID.WEAPON1:
+                key = weapon1;
+                break;
+            case ButtonID.WEAPON2:
+                key = weapon2;
+                break;
+            case ButtonID.WEAPON3:
+                key = weapon3;
+                break;
+
         }
         if (!result) { result = bf(key); } //if the result is still false (i.e. trigger input hasn't been converted to button input), then check key
 
@@ -184,5 +236,10 @@ public class GamepadConfig : ScriptableObject, IControllerInput
     public bool IsController()
     {
         return true;
+    }
+
+    public LockOnType GetLockOnType()
+    {
+        return lockType;
     }
 }

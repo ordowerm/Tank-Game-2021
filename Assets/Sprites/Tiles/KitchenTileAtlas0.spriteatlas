@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: KitchenTileAtlas0
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 1
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    variantMultiplier: 1
+    packables:
+    - {fileID: -6173254558267131710, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+    - {fileID: 5223050511107140089, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+    - {fileID: -4525113921814543578, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+    - {fileID: -4936574327360817725, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+    - {fileID: -7532787450489828128, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+    - {fileID: -3050904176185222156, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: -6173254558267131710, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+  - {fileID: -4525113921814543578, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+  - {fileID: -4936574327360817725, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+  - {fileID: -7532787450489828128, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+  - {fileID: -3050904176185222156, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+  - {fileID: 5223050511107140089, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - kitchen_tiles0_0
+  - kitchen_tiles0_1
+  - kitchen_tiles0_2
+  - kitchen_tiles0_3
+  - kitchen_tiles0_5
+  - kitchen_tiles0_6
+  m_Tag: KitchenTileAtlas0
+  m_IsVariant: 0

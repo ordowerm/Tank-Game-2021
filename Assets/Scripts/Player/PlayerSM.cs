@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerSM : InputStateMachine
 {
-
     public enum AnimationNumbers
     {
         STAND = 0, WALK, ROLL
@@ -33,25 +32,25 @@ public class PlayerSM : InputStateMachine
     public Vector2 GetLastPress() { return lastpress; }
 
 
-
     //Aiming/Lock-On parameters
     bool lockedOn=false;
     List<GameObject> lockOnList;
     float lockOnTimer;
     float lockOnResetTimer;
-    int lockOnId=-1;
-   
+    int lockOnId=0;
+    int lastLockOnPressed = 0;
 
-
-
+    //Invincibility parameters
+    float iFrameTimer = 0;
 
     // Start is called before the first frame update
     void Start()
     {
+        lockOnList = new List<GameObject>();
         walkState = new PlayerWalkState(this.gameObject, this,keyconfig,arm,gun);
         standState = new PlayerStandState(this.gameObject, this,keyconfig,arm,gun);
         rollState = new PlayerRollState(this.gameObject, this,keyconfig);
-        lockOnList = new List<GameObject>();
+        hitboxes = GetComponentsInChildren<Collider2D>();
         Initialize(startState: standState);
     }
 
@@ -94,16 +93,8 @@ public class PlayerSM : InputStateMachine
     public void SetLockedOn(bool isLocked, List<GameObject> elist, int num)
     {
         lockedOn = isLocked;
-        if (lockedOn)
-        {
-            lockOnList = elist;
-            lockOnId = num;
-        }
-        else
-        {
-            lockOnId = -1;
-            lockOnList = null;
-        }
+        lockOnList = elist;
+        lockOnId = num;
     }
     public void SetLockTimer(float t)
     {
@@ -119,4 +110,30 @@ public class PlayerSM : InputStateMachine
     {
         lockOnResetTimer = r;
     }
+
+    public int GetLastLockOnPressed() { return lastLockOnPressed; }
+    public void SetLastLockOnPressed(int i) { lastLockOnPressed = i; }
+    
+    //Call in level manger when an enemy is destroyed
+    public void SetEnemyPool() {
+        if (currentState is PlayerAimState)
+        {
+            ((PlayerAimState)currentState).MakeEnemyList(true);
+        }
+    }
+
+    //Call when invincibility frames start, end, etc.
+    public void SetHitboxActive(bool val)
+    {
+        foreach (Collider2D c in hitboxes)
+        {
+            c.enabled = val;
+        }
+    }
+    public float GetIFrameTimer() { return iFrameTimer; }
+    public void SetIFrameTimer(float time) { iFrameTimer = time; }
+
+
+    //Calls for weapon modification
+    public void SetWeapon() { }
 }

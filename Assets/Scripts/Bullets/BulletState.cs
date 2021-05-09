@@ -5,6 +5,9 @@ using UnityEngine;
 public class BulletState : State
 {
     protected BulletData bd;
+    public TrailRenderer trail;
+    public ParticleSystem startParticle;
+    public ParticleSystem endParticle;
 
     public BulletState(GameObject t, GameStateMachine s, BulletData bdata) : base(t, s)
     {

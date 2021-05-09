@@ -98,17 +98,51 @@ public class WeaponScript : MonoBehaviour
     //Sets reticle scale and position when locked on
     public void SetReticleTarget(GameObject t)
     {
+        if (t == null)
+        {
+            Debug.Log("Setting null target");
+
+            return;
+        }
+
+        //if the target changes, notify the current target
+        if (reticle.transform.parent != null)
+        {
+            if (
+                reticle.transform.parent.gameObject != this.gameObject &&
+                reticle.transform.gameObject != t
+                )
+            {
+                reticle.transform.parent.GetComponent<EnemyStateMachine>().UnregisterReticle();
+            }
+        }
+
+        t.GetComponent<EnemyStateMachine>().RegisterReticle(reticle);
         reticle.transform.SetParent(t.transform);
         reticle.transform.localPosition = new Vector2(0,0);
         reticle.transform.localScale = new Vector3(reticleMaxScale, reticleMaxScale, 1);
+        
+        //Attempt to turn on glow animation on reticle
+        GlowAnimation g = reticle.GetComponent<GlowAnimation>();
+        if (g)
+        {
+            g.SetActive(true);
+        }
     }
     public void ResetReticle()
     {
+        if (reticle.transform.parent == gameObject.transform) { return; }
         reticle.transform.position = this.transform.position;
         reticle.transform.SetParent(this.transform);
         reticle.transform.localPosition = new Vector2(defaultReticleDistance,0);
         reticle.transform.localScale = new Vector3(reticleMinScale, reticleMinScale, 1);
 
+        //Attempt to turn off glow animation on reticle
+        GlowAnimation g = reticle.GetComponent<GlowAnimation>();
+        if (g)
+        {
+            g.SetActive(false);
+        }
     }
 
     protected void Update()

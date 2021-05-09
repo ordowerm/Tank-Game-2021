@@ -10,12 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0872ecb7679fc243819a855f944c110, type: 3}
-  m_Name: CircleBullet
+  m_Name: PlayerTriangleBullet
   m_EditorClassIdentifier: 
-  sprite: {fileID: 5116123242225802251, guid: 8dbb9016d9aa5c34484f8e417b221f91, type: 3}
-  trailParticleSprite: {fileID: 0}
-  hitParticleSprite: {fileID: 0}
-  element: {fileID: 11400000, guid: f92bad4f4127bb141816afcf38c767c9, type: 2}
+  sprite: {fileID: -452080849169159284, guid: c74156928a3f34f4e90bf573c2bc0274, type: 3}
+  trailParticleSprite: {fileID: 146839049008219127, guid: 0598147909f3b2e4bb6e16385c4ecfa7,
+    type: 3}
+  hitParticleSprite: {fileID: 146839049008219127, guid: 0598147909f3b2e4bb6e16385c4ecfa7,
+    type: 3}
+  element: {fileID: 11400000, guid: efdfb8cbf393dda4eaeb8d03658b9f8a, type: 2}
   EnemyBullet: 0
   lifespan: 0.5
   speed: 30

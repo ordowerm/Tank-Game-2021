@@ -6,6 +6,7 @@ public class GameStateMachine : MonoBehaviour
 {
     public bool debug;
     protected State currentState;
+    public LevelManager levelManager;
     
 
     public void Initialize(State startState)

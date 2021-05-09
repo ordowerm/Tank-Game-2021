@@ -11,6 +11,7 @@ using UnityEngine.UI;
  */
 public class PlayerUIPaneMgmt : MonoBehaviour
 {
+    public Canvas canvas;
     public Text PlayerNameText;
     public Text PlayerScoreText;
     const char numericDivider = ','; //used for localization purposes. In the US we divide every three digits of numbers > 0 with commas, but in other countries, it's periods or spaces
@@ -59,7 +60,7 @@ public class PlayerUIPaneMgmt : MonoBehaviour
         else { CurrentHealth = val; }
         UpdateHealth();
     }
-    public void UpdateHealth()
+    public void UpdateHealthOld()
     {
         float healthStep = MaxHealth / (float)HealthSections.Length; //amount of health, per segment
         for (int i = 0; i < HealthSections.Length; i++)
@@ -72,6 +73,7 @@ public class PlayerUIPaneMgmt : MonoBehaviour
 
             //get proportion of health section currently covered
             float healthprop = (CurrentHealth - ((float)i) * healthStep) / healthStep;
+            //alt health prop
 
 
             if (healthprop >= 1)
@@ -102,7 +104,49 @@ public class PlayerUIPaneMgmt : MonoBehaviour
 
     }
     
-    
+    public void UpdateHealth()
+    {
+        float healthStep = MaxHealth / (float)HealthSections.Length; //amount of health, per segment
+        for (int i = 0; i < HealthSections.Length; i++)
+        {
+             //Debug.Log("Current Health: " + CurrentHealth + "; Section Health: " + i*healthStep);
+            //uncull health section
+            if (HealthSections[i].canvasRenderer.cull == true)
+            {
+                HealthSections[i].canvasRenderer.cull = false;
+            }
+
+            //Set default color for each square
+            float prop = ((float)i * healthStep) / MaxHealth;
+            if (prop >= 0 &&
+                prop < 0.5f)
+            {
+                HealthSections[i].color = Color.Lerp(HealthMinColor, HealthMidColor, prop * 2.0f);
+            }
+            else if (
+                prop < (MaxHealth - healthStep)/MaxHealth
+                )
+            {
+                HealthSections[i].color = Color.Lerp(HealthMidColor, HealthMaxColor, 2*prop-1);
+            }
+            else
+            {
+                HealthSections[i].color = HealthMaxColor;
+            }
+
+
+            if (
+                (float)i*healthStep >= CurrentHealth
+                
+                )
+            {
+                //HealthSections[i].canvasRenderer.cull = true;
+                HealthSections[i].color = new Color(0, 0, 0, 0);
+            }
+        }
+
+    }
+
     //Other UI updates
     public void UpdateSkinColor(Color skincolor)
     {

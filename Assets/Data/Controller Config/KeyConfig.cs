@@ -21,8 +21,11 @@ public class KeyConfig : ScriptableObject, IControllerInput
     public KeyCode switchWeaponLeftKey;
     public KeyCode switchSubRightKey;
     public KeyCode switchSubLeftKey;
+    public KeyCode switchTargetRight;
+    public KeyCode switchTargetLeft;
     public KeyCode shootkey;
     public KeyCode subweaponkey;
+    public LockOnType lockType;
 
     public Vector2 GetAim()
     {
@@ -111,5 +114,19 @@ public class KeyConfig : ScriptableObject, IControllerInput
     public bool IsController()
     {
         return false;
+    }
+
+    public int GetSwitchAxis()
+    {
+        int result = 0;
+        if (GetButtonDown(ButtonID.SWITCH_TARGET_RIGHT)) { result++; }
+        if (GetButtonDown(ButtonID.SWITCH_TARGET_LEFT)) { result--; }
+        return result;
+
+    }
+
+    public LockOnType GetLockOnType()
+    {
+        return lockType;
     }
 }

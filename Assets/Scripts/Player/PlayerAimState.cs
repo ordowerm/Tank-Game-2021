@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAimState : InputState
+public class PlayerAimState : PlayerState
 {
     protected Vector2 movedir = new Vector2(0, 0);
     protected Vector2 aimdir = new Vector2(0, 0);
@@ -21,6 +21,7 @@ public class PlayerAimState : InputState
     protected float lockTimer; //once this timer surpasses PlayerParameters.lockOnTime, then lock-on is cancelled.
     protected float lockResetTimer; //once this number reaches the lockOnResetLimit, set lockId to 0
     protected float lockOnResetLimit;
+    protected int lastLockOnPressed=0;
 
     //constructor takes target game object, state machine running it, controller configuration, and arm gameobject for aiming
     public PlayerAimState(GameObject t, PlayerSM playerSM, IControllerInput c, GameObject a, GameObject g) : base(t, playerSM,c)
@@ -43,10 +44,13 @@ public class PlayerAimState : InputState
         base.OnEnter();
         rolltimer = ((PlayerSM)sm).GetRollTimer();
         lockedOn = ((PlayerSM)sm).GetLockedOn();
-        //enemyList = ((PlayerSM)sm).GetLockOnList();
+        
+        //Get Lockon Parameters
+        enemyList = ((PlayerSM)sm).GetLockOnList();
         lockId = ((PlayerSM)sm).GetLockOnId();
         lockTimer = ((PlayerSM)sm).GetLockTimer();
         lockResetTimer = ((PlayerSM)sm).GetLockOnResetTimer();
+        lastLockOnPressed = ((PlayerSM)sm).GetLastLockOnPressed();
     }
 
     public override void OnExit()
@@ -56,6 +60,7 @@ public class PlayerAimState : InputState
         ((PlayerSM)sm).SetLockedOn(lockedOn,enemyList,lockId);
         ((PlayerSM)sm).SetLockTimer(lockTimer);
         ((PlayerSM)sm).SetLockOnResetTimer(lockResetTimer);
+        ((PlayerSM)sm).SetLastLockOnPressed(lastLockOnPressed);
     }
 
     //After calling Handle Input, 
@@ -95,44 +100,29 @@ public class PlayerAimState : InputState
         }
         else
         {
-            //IMPLEMENT LOCK-ON HERE
-            try
-            {
-                if (lockId > -1 && enemyList.Count > 0)
+           if (lockId > -1 && enemyList.Count > 0)
                 {
-                    Debug.Log("Lock id = " + lockId + " Count = " + enemyList.Count);
+                    //Debug.Log("Lock id = " + lockId + " Count = " + enemyList.Count);
                     arm.transform.rotation = Quaternion.Euler(0, 0, GetEnemyAngle(enemyList[lockId]));
                     aimdir = new Vector2(enemyList[lockId].transform.position.x - target.transform.position.x,target.transform.position.y-enemyList[lockId].transform.position.y).normalized; //update stored aim direction so that cannon remains facing the enemy once lockon ends
 
                 }
-                /*Transform ot = enemyList[lockId].transform;
-                float deltaX = ot.position.x - arm.transform.position.x;
-                float deltaY = ot.position.y - arm.transform.position.y;
-                
-                //if directly above/below target, aim toward it
-                if (deltaX == 0)
-                {
-                    if (deltaY < 0)
-                    {
-                        arm.transform.rotation = Quaternion.Euler(0, 0, 90);
-                    }
-                    else
-                    {
-                        arm.transform.rotation = Quaternion.Euler(0, 0, 270);
-                    }
-                }
-                else
-                {
-                    arm.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(deltaY, -deltaX) * 180.0f / Mathf.PI + 180.0f); //set rotation of cannon
-                }*/
-            }
-            catch (System.IndexOutOfRangeException)
-            {
-                Debug.LogError("Aiming at a nonexistent enemy.");
-            }
+            
         }
 
-        
+        //mirror gun vertically depending on Euler angle of arm.
+        float rotvalue = arm.transform.eulerAngles.z;
+        if (
+            rotvalue > -90 && rotvalue < 90 ||
+            rotvalue > 270 && rotvalue < 360
+            )
+        {
+            gun.transform.localScale = new Vector3(1, 1, 1);
+        }
+        else
+        {
+            gun.transform.localScale = new Vector3(1, -1, 1);
+        }
     }
     
     //TODO
@@ -141,7 +131,8 @@ public class PlayerAimState : InputState
     //Consider refactoring, if there's another object keeping the enemy list
     protected float GetEnemyAngle(GameObject g)
     {
-        float result = 0;
+        if (!g) { return 0; }
+        float result;
         float deltaX = g.transform.position.x - arm.transform.position.x;
         float deltaY = g.transform.position.y - arm.transform.position.y;
         if (deltaX == 0)
@@ -184,51 +175,104 @@ public class PlayerAimState : InputState
     }
 
     //Makes list of enemies that you can lock onto and sorts them by priority.
-    protected void MakeEnemyList()
+   public void MakeEnemyList(bool sort)
     {
-        GameObject[] candidates = GameObject.FindGameObjectsWithTag("Enemy");
-        enemyList.Clear(); //reset enemy array
-        for (int i =0; i< candidates.Length; i++)
-        {
-            if (
-                    GetEnemyAngleError(candidates[i])<= ((PlayerSM)sm).pparams.maxAngleError &&
-                    GetEnemyDistance(candidates[i]) <= ((PlayerSM)sm).pparams.maxEnemyDistanceForLockOn
-               )
-            {
-                enemyList.Add(candidates[i]);
-            }
-        }
-        //debug sorting alg
-        string liststring = "";
-        foreach (GameObject g in enemyList){
-            liststring += g.name + "   ";
-        }
-        Debug.Log("Unsorted list: " + liststring);
-        
-        enemyList.Sort((IComparer<GameObject>)Comparer<GameObject>.Create((i1, i2) => this.EnemySortHeuristic(i2).CompareTo(this.EnemySortHeuristic(i1)))); //sort list, lowest score first
+         /*
+         * Since this might be called while we're locked on, 
+         * we don't want to lose track of the enemy we're currently locked onto.
+         * However, if the enemy list is reconstructed, the index of the enemy we're locked onto,
+         * in the enemyList array, might have changed.
+         * If lockedOn is true, iterate through the new enemy list,
+         * and find the new lockon index of the target you're already locked onto.
+         * If no such index exists, then the enemy was destroyed, and you should lock onto a new target.
+         */
 
-        //debug sorting alg
-        liststring = "";
-        foreach (GameObject g in enemyList)
-        {
-            liststring += g.name + "   ";
-        }
-        Debug.Log("Sorted list: " + liststring);
-    }
-
-    //TODO
-    //Change target
-    protected void ChangeLockOnTarget()
-    {
+        GameObject currentLockOnTarget=null;
         if (enemyList.Count > 0)
         {
-            if (lockResetTimer >= lockOnResetLimit)
-            {
-                lockId = -1;
-            }
-            lockId++;
-            lockId = lockId % enemyList.Count;
+            currentLockOnTarget = enemyList[lockId];
         }
+        Dictionary<int, GameObject> candidates = ((PlayerSM)sm).levelManager.GetEnemyList();           
+        enemyList.Clear(); //reset enemy array
+
+        //iterate through candidates and construct lock-on list, assuming they're within lock-on range
+        foreach (KeyValuePair<int,GameObject> can in candidates)
+        {
+            //Check whether enemy candidate is within desired aiming range
+            bool withinAngleError = GetEnemyAngleError(can.Value) <= ((PlayerSM)sm).pparams.maxAngleError;
+
+            //If using a switch lock-on type, let any enemy within firing distance be included, even if you're not aiming that direction.
+            if (cont.GetLockOnType() == LockOnType.SWITCH)
+            {
+                withinAngleError = true;
+            }
+
+            //populate list of enemies you can lock onto based on above criteria
+            if (
+                    withinAngleError &&
+                    GetEnemyDistance(can.Value) <= ((PlayerSM)sm).pparams.maxEnemyDistanceForLockOn
+               )
+            {
+                enemyList.Add(can.Value);
+            }
+
+        }
+        
+        //Sort enemy list to determine best initial target
+        if (sort)
+        {
+            enemyList.Sort((IComparer<GameObject>)Comparer<GameObject>.Create((i1, i2) => this.EnemySortHeuristic(i2).CompareTo(this.EnemySortHeuristic(i1)))); //sort list, lowest score first
+        }
+             
+        //iterate through new enemy list to stay locked onto the same enemy
+        if (lockedOn && currentLockOnTarget != null)
+        {
+            bool targetFound = false;
+            for (int i = 0; i<enemyList.Count; i++)
+            {
+                if (enemyList[i] == currentLockOnTarget)
+                {
+                    lockId = i;
+                    targetFound = true;
+                }
+            }
+            if (!targetFound)
+            {
+
+                if (enemyList.Count == 0)
+                {
+                    lockedOn = false;
+                    lockResetTimer = 0;
+                    gun.GetComponent<WeaponScript>().ResetReticle();
+                }
+                else
+                {
+                    lockId = 0;
+                    gun.GetComponent<WeaponScript>().SetReticleTarget(enemyList[lockId]);
+                }
+
+            }
+        }
+        if (enemyList.Count == 0)
+        {
+            lockedOn = false;
+            lockResetTimer = 0;
+            gun.GetComponent<WeaponScript>().ResetReticle();
+        }
+    }
+
+
+
+    //TODO
+    //Change target if on hold mode
+    protected void ChangeHoldLockOnTarget()
+    {
+             
+            if (cont.GetLockOnType() == LockOnType.HOLD)
+            {
+
+                lockId = (lockId + 1) % enemyList.Count;
+            }       
     }
 
 
@@ -263,31 +307,85 @@ public class PlayerAimState : InputState
         }
         
         
-        //Check for lock-on presses
-        if (cont.GetButtonDown(ButtonID.LOCK_ON))
+        //Run when locked on
+        if (lockedOn)
         {
-            if (!lockedOn)
+            //Check for switching lock-on target
+            if (cont.GetLockOnType() == LockOnType.SWITCH)
             {
-                MakeEnemyList();
-                ChangeLockOnTarget();
-                if (enemyList.Count > 0)
+                int change = cont.GetSwitchAxis(); //get status of "Change Target" button press
+                
+                //If there's at least one enemy, and the "Change Target" button status has changed
+                if (
+                    enemyList.Count > 0 &&
+                    lastLockOnPressed != change
+                    )
                 {
-                    lockedOn = true;
-                    gun.GetComponent<WeaponScript>().SetReticleTarget(enemyList[lockId]);
+                    //Debug.Log("Changed lockon state");
+
+                    if (change != 0) {
+                        //Change lockId number
+                        lockId = (lockId + change);
+                        if (lockId < 0)
+                        {
+                            lockId = enemyList.Count - 1;
+                        }
+                        lockId = lockId % enemyList.Count;
+
+                        //Debug.Log("LockOn Id " + lockId + " locked onto: " + enemyList[lockId].name);
+                        gun.GetComponent<WeaponScript>().SetReticleTarget(enemyList[lockId]);
+                    }
+
+                    
+                   
+                    lastLockOnPressed = change;
+                }
+                else if (enemyList.Count == 0)
+                {
+                    gun.GetComponent<WeaponScript>().ResetReticle();
+                    lockedOn = false;
+                    lockResetTimer = 0; //start the lockon reset timer
                 }
             }
-            
-        }
-        //if lock-on button no longer held, quit locking on
-        if (!cont.GetButton(ButtonID.LOCK_ON))
-        {
-            if (lockedOn) { 
-                gun.GetComponent<WeaponScript>().ResetReticle();
-                lockedOn = false;
-                lockResetTimer = 0;
+
+            //if lock-on button no longer held, or if lock cancel button is pressed, quit locking on
+            if (
+                (!cont.GetButton(ButtonID.LOCK_ON) && cont.GetLockOnType() == LockOnType.HOLD) ||
+                cont.GetButtonDown(ButtonID.CANCEL_LOCK_ON) ||
+                enemyList.Count == 0
+                )
+            {
+                
+                    gun.GetComponent<WeaponScript>().ResetReticle();
+                    lockedOn = false;
+                    lockResetTimer = 0; //start the lockon reset timer
             }
 
         }
+
+        //Check for lock-on presses
+        else {
+
+            gun.GetComponent<WeaponScript>().ResetReticle();
+            if (cont.GetButtonDown(ButtonID.LOCK_ON))
+            {
+                
+                    MakeEnemyList(true);
+                    ChangeHoldLockOnTarget();
+                    if (enemyList.Count > 0)
+                    {
+                        lockedOn = true;
+                        gun.GetComponent<WeaponScript>().SetReticleTarget(enemyList[lockId]);
+                    }
+                
+            }
+
+            
+        }
+        
+       
+
+      
 
         //check if roll button is pressed
         rollpress = cont.GetButtonDown(ButtonID.ROLL);
@@ -319,22 +417,17 @@ public class PlayerAimState : InputState
     {
         //Debug.Log("Rolltimer: " + rolltimer);
         base.LogicUpdate();
-        if (!lockedOn && lockResetTimer < lockOnResetLimit) { lockResetTimer += Time.deltaTime; } //reset aim after a few seconds of not locking on to anything
+        
+        if (!lockedOn)
+        {
+            if (lockResetTimer < lockOnResetLimit) { lockResetTimer += Time.deltaTime; } //reset aim after a few seconds of not locking on to anything
+            else { lockId = 0; }
+        }
+       
+        
         AimCannon();
 
-        //mirror gun vertically depending on Euler angle of arm.
-        float rotvalue = arm.transform.eulerAngles.z;
-        if (
-            rotvalue > -90 && rotvalue < 90 ||
-            rotvalue > 270 && rotvalue < 360
-            )
-        {
-            gun.transform.localScale = new Vector3(1, 1, 1);
-        }
-        else
-        {
-            gun.transform.localScale = new Vector3(1, -1, 1);
-        }
+
     
         
     }
