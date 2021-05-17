@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc4d122c4244f3b4e9a3796d51a87f16, type: 3}
+  m_Name: BGList1
+  m_EditorClassIdentifier: 
+  layers:
+  - sprite: {fileID: -949334673909126261, guid: 0598147909f3b2e4bb6e16385c4ecfa7,
+      type: 3}
+    spriteTint: {r: 0.9433962, g: 0.5221187, b: 0.3960484, a: 1}
+    drawMode: 0
+    position: {x: 0, y: 0}
+    depth: 0
+    size: {x: 1, y: 1}
+    baseSpeeds: {x: 1, y: 1}
+  - sprite: {fileID: -949334673909126261, guid: 0598147909f3b2e4bb6e16385c4ecfa7,
+      type: 3}
+    spriteTint: {r: 0.773, g: 0.4265934, b: 0.32395437, a: 1}
+    drawMode: 0
+    position: {x: 0, y: 1}
+    depth: 1
+    size: {x: 1, y: 1}
+    baseSpeeds: {x: 1, y: 1}
+  - sprite: {fileID: -949334673909126261, guid: 0598147909f3b2e4bb6e16385c4ecfa7,
+      type: 3}
+    spriteTint: {r: 0.687, g: 0.38011673, b: 0.28944668, a: 1}
+    drawMode: 0
+    position: {x: 0, y: 2}
+    depth: 2
+    size: {x: 1, y: 1}
+    baseSpeeds: {x: 1, y: 1}
+  - sprite: {fileID: -949334673909126261, guid: 0598147909f3b2e4bb6e16385c4ecfa7,
+      type: 3}
+    spriteTint: {r: 0.56, g: 0.3104, b: 0.23680001, a: 1}
+    drawMode: 0
+    position: {x: 0, y: 3}
+    depth: 3
+    size: {x: 1, y: 1}
+    baseSpeeds: {x: 1, y: 1}
+  - sprite: {fileID: -949334673909126261, guid: 0598147909f3b2e4bb6e16385c4ecfa7,
+      type: 3}
+    spriteTint: {r: 0.376, g: 0.20772026, b: 0.15776223, a: 1}
+    drawMode: 0
+    position: {x: 0, y: 4}
+    depth: 4
+    size: {x: 1, y: 1}
+    baseSpeeds: {x: 1, y: 1}

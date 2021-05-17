@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class SkinAttributes : MonoBehaviour
 {
     public Color skintint; //color used for player skin
     public GameObject[] skinobjects; //objects to apply skin tint to.
+    public Image hairImage;
+    public Image faceImage;
     public Color haircolor;
     public Sprite hairtop;
     public GameObject hairobject;
@@ -21,6 +25,8 @@ public class SkinAttributes : MonoBehaviour
         SpriteRenderer hair = hairobject.GetComponent<SpriteRenderer>();
         hair.sprite = hairtop;
         hair.color = haircolor;
+        hairImage.sprite = hairtop;
+        faceImage.color = skintint;
     }
 
 

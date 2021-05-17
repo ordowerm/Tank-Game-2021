@@ -201,4 +201,12 @@ public class PlayerUIPaneMgmt : MonoBehaviour
 
 
 
+    //Set image to match weapon
+    public void SetWeaponGraphic(BulletData w)
+    {
+        WeaponIcon.sprite = w.sprite;
+        WeaponIcon.color = w.element.primary;
+    }
+
+
 }

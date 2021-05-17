@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idNumber: 2
   elemName: Circle
+  reticleSprite: {fileID: -507390815202373885, guid: 819d5deb4bde4f049945f200096f258c,
+    type: 3}
   primary: {r: 0.8, g: 0.4745098, b: 0.654902, a: 1}
   secondary: {r: 0, g: 0, b: 0, a: 0}

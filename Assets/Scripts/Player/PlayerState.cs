@@ -27,6 +27,39 @@ public class PlayerState : InputState
     {
         base.HandleInput();
         //TO-DO: button presses change the weapon
+        WeaponSelectHelp();
+
+    }
+    
+    //Helper function eliminating button press priority when trying to change weapons
+    //In other words, pressing Weapon0 only works if you're NOT also pressing others
+    protected void WeaponSelectHelp()
+    {
+        bool w0 = cont.GetButtonDown(ButtonID.WEAPON0);
+        bool w1 = cont.GetButtonDown(ButtonID.WEAPON1);
+        bool w2 = cont.GetButtonDown(ButtonID.WEAPON2);
+        
+        
+        if (
+                //if multiple weapon switch pressed, return
+                (
+                    (w0 && w1) ||
+                    (w1 && w2) ||
+                    (w0 && w2)
+                ) ||
+                !(w0 || w1 || w2) //if no weapon switch pressed, return
+            )
+        {
+            return;
+        }
+
+        
+
+        if (w0) { ((PlayerSM)sm).SetWeapon(WeaponScript.WeaponName.WEAPON0); }
+        if (w1) { ((PlayerSM)sm).SetWeapon(WeaponScript.WeaponName.WEAPON1); }
+        if (w2) { ((PlayerSM)sm).SetWeapon(WeaponScript.WeaponName.WEAPON2); }
+
+
 
     }
 }

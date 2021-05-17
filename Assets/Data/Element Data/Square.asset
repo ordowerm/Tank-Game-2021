@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idNumber: 3
   elemName: Square
+  reticleSprite: {fileID: 8166880935265719746, guid: 819d5deb4bde4f049945f200096f258c,
+    type: 3}
   primary: {r: 0.9019608, g: 0.62352943, b: 0, a: 1}
   secondary: {r: 0, g: 0, b: 0, a: 0}

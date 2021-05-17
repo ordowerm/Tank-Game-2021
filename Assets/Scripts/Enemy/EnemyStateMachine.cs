@@ -10,6 +10,7 @@ public class EnemyStateMachine : GameStateMachine
     protected Collider2D[] hitboxes;
     public Animator anim;
     protected GameObject reticle=null; //current implementation only allows one reticle to be aiming at this dude. refactor
+    public EnemyData data;
 
     protected void Awake()
     {

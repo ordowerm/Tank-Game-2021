@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0872ecb7679fc243819a855f944c110, type: 3}
+  m_Name: PlayerSquareBullet
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 4018901904181487369, guid: c74156928a3f34f4e90bf573c2bc0274, type: 3}
+  trailParticleSprite: {fileID: -949334673909126261, guid: 0598147909f3b2e4bb6e16385c4ecfa7,
+    type: 3}
+  hitParticleSprite: {fileID: -949334673909126261, guid: 0598147909f3b2e4bb6e16385c4ecfa7,
+    type: 3}
+  element: {fileID: 11400000, guid: 90f7b8826ceafee43b7a1d7d4def85a0, type: 2}
+  EnemyBullet: 0
+  lifespan: 0.5
+  speed: 30

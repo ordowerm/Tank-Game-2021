@@ -28,6 +28,7 @@ SpriteAtlas:
       allowAlphaSplitting: 0
       enableRotation: 1
       enableTightPacking: 1
+    secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
     - {fileID: -6173254558267131710, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
@@ -36,7 +37,10 @@ SpriteAtlas:
     - {fileID: -4936574327360817725, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
     - {fileID: -7532787450489828128, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
     - {fileID: -3050904176185222156, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
+    totalSpriteSurfaceArea: 6144
     bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: -6173254558267131710, guid: defbe056750b7b44f94ecf112476a10f, type: 3}
@@ -52,5 +56,6 @@ SpriteAtlas:
   - kitchen_tiles0_3
   - kitchen_tiles0_5
   - kitchen_tiles0_6
+  m_RenderDataMap: {}
   m_Tag: KitchenTileAtlas0
   m_IsVariant: 0

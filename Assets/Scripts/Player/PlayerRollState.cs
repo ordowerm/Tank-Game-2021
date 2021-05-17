@@ -11,6 +11,11 @@ public class PlayerRollState : PlayerState
     protected AnimationCurve curve;
     protected float speed;
 
+
+    //set particle prefab when intializing state
+    public GameObject particle;
+
+
     public PlayerRollState(GameObject t, PlayerSM playerSM, IControllerInput c):base(t, playerSM,c)
     {
         this.target = t;
@@ -20,6 +25,10 @@ public class PlayerRollState : PlayerState
         speed = ((PlayerSM)sm).pparams.rollspeed;
         curve = ((PlayerSM)sm).pparams.rollcurve;
     }
+    
+    
+    
+
 
     public override void OnEnter()
     {
@@ -27,6 +36,7 @@ public class PlayerRollState : PlayerState
         rolltimer = 0; //reset roll timer
         initialDir = ((PlayerSM)sm).GetLastPress().normalized;
         ((PlayerSM)sm).SetAnimationState(PlayerSM.AnimationNumbers.ROLL);
+        SpawnParticles(10);
     }
 
     
@@ -49,9 +59,6 @@ public class PlayerRollState : PlayerState
     {
         base.LogicUpdate();
 
-        
-
-
         //change to walk state if moving
         if (rolltimer >= endtime)
         {
@@ -72,17 +79,41 @@ public class PlayerRollState : PlayerState
             ((PlayerSM)sm).SetAnimationTimer(GetAnimationTime(initialDir));
             
         }
+
+        //probabilistically spawn particles
+        if (Random.value < curve.Evaluate( rolltimer / endtime))
+        {
+            SpawnParticles(3);
+       }
     }
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
         rb.velocity = speed * curve.Evaluate(GetAnimationTime(new Vector2(-1, 0)))*initialDir;
     }
-
     public override void OnExit()
     {
         base.OnExit();
         //rolltimer = 0;
         ((PlayerSM)sm).SetRollTimer(0);
     }
+    
+
+
+
+    //
+    void SpawnParticles(int spawnNo)
+    {
+        //spawn particle
+        if (particle)
+        {
+            for (int i = 0; i < spawnNo; i++)
+            {
+                GameObject instance = GameObject.Instantiate(particle);
+                instance.transform.position = target.transform.position + instance.GetComponent<SpriteParticle>().offset;
+            }
+            
+        }
+    }
+
 }

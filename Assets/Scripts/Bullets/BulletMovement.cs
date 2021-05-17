@@ -67,6 +67,12 @@ public class BulletMovement : GameStateMachine
         bdata = b;
         sprite.sprite = bdata.sprite;
         sprite.color = bdata.element.primary;
+        if (trail)
+        {
+            //trail.enabled = false;
+            trail.startColor = new Color(bdata.element.primary.r, bdata.element.primary.g, bdata.element.primary.b, trailAlpha);
+            trail.endColor = new Color(1, 1, 1, trailAlpha);
+        }
     }
 
     public void SetInitialDirection(float rot)

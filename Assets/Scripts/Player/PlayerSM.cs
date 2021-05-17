@@ -8,6 +8,7 @@ public class PlayerSM : InputStateMachine
     {
         STAND = 0, WALK, ROLL
     }
+    public int playerId;
 
     public Animator anim;
     public PlayerParameters pparams;
@@ -43,6 +44,11 @@ public class PlayerSM : InputStateMachine
     //Invincibility parameters
     float iFrameTimer = 0;
 
+
+    //VFX params
+    public GameObject dustParticle;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +56,7 @@ public class PlayerSM : InputStateMachine
         walkState = new PlayerWalkState(this.gameObject, this,keyconfig,arm,gun);
         standState = new PlayerStandState(this.gameObject, this,keyconfig,arm,gun);
         rollState = new PlayerRollState(this.gameObject, this,keyconfig);
+        rollState.particle = dustParticle;
         hitboxes = GetComponentsInChildren<Collider2D>();
         Initialize(startState: standState);
     }
@@ -135,5 +142,9 @@ public class PlayerSM : InputStateMachine
 
 
     //Calls for weapon modification
-    public void SetWeapon() { }
+    public void SetWeapon(WeaponScript.WeaponName wn) {
+        WeaponScript wscript = gun.GetComponent<WeaponScript>();
+        wscript.UpdateWeapon(wn);
+        levelManager.levelUI.UpdateUIPaneWeaponDisplay(playerId, wscript.GetBulletData());
+    }
 }

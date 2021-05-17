@@ -7,6 +7,7 @@ public class ElementData : ScriptableObject
 {
     public int idNumber;
     public string elemName;
+    public Sprite reticleSprite;
     public Color primary;
     public Color secondary;
 }

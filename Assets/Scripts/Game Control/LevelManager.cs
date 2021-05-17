@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-
+    public bool sceneActive;
     public GameObject[] enemyObjects; //for testing purposes
     public GameObject[] playerDudes; //for testing purposes
 
@@ -12,6 +12,10 @@ public class LevelManager : MonoBehaviour
     protected Dictionary<int, GameObject> playerList;
     protected Queue<int> returnedEnemyIds; //when an enemy is destroyed, return its ID number to a pool
     protected int enemyCount;
+
+    public LevelUIManager levelUI;
+    public float timeLimit; //timer's maximum value
+    float timer;
     
     // Start is called before the first frame update
     void Start()
@@ -31,7 +35,7 @@ public class LevelManager : MonoBehaviour
             playerList.Add(i, playerDudes[i]);
         }
 
-        
+        timer = timeLimit;
 
     }
 
@@ -102,6 +106,27 @@ public class LevelManager : MonoBehaviour
 
     private void Update()
     {
+        if (sceneActive)
+        {
+            if (timer > 0)
+            {
+                timer -= Time.deltaTime;
+                levelUI.SetTimerText(timer);
+            }
+            else if (timer < 0) { 
+                timer = 0;
+                sceneActive = false;
+                levelUI.SetTimerText("Time\'s Up!");
+                //Time.timeScale = 0.3f;
+            }
+            else
+            {
+                levelUI.SetTimerText("Time\'s Up!");
+
+            }
+
+        }
+
         if (useFunkyCamera)
         {
             AdjustCameraY();

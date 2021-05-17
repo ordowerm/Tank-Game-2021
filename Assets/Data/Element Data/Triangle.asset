@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   idNumber: 1
   elemName: Triangle
+  reticleSprite: {fileID: -2229122128910862035, guid: 819d5deb4bde4f049945f200096f258c,
+    type: 3}
   primary: {r: 0, g: 0.61960787, b: 0.4509804, a: 1}
   secondary: {r: 0, g: 1, b: 0, a: 1}

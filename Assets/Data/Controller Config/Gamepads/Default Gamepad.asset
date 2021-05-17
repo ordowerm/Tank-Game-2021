@@ -41,3 +41,7 @@ MonoBehaviour:
   deadzoneSwitchTarget: 0.1
   lockType: 1
   switchTargetAxis: aimhoriz
+  weapon0: 331
+  weapon1: 333
+  weapon2: 330
+  weapon3: 0
