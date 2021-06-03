@@ -6,18 +6,25 @@ public class GameStateMachine : MonoBehaviour
 {
     public bool debug;
     protected State currentState;
+    protected State previousState; //for now, let's not include a full stack of states. Just use the most recent
     public LevelManager levelManager;
-    
+
+
 
     public void Initialize(State startState)
     {
         currentState = startState;
         currentState.OnEnter();
+        previousState = null;
     }
 
 
-    public void ChangeState(State nextState)
+    public virtual void ChangeState(State nextState)
     {
+        if (previousState != currentState)
+        {
+            previousState = currentState;
+        }
         currentState.OnExit();
         currentState = nextState;
         if (debug)
@@ -25,7 +32,11 @@ public class GameStateMachine : MonoBehaviour
             Debug.Log("Entering state: " + currentState);
         }
         currentState.OnEnter();
-        
+    }
+
+    public virtual void ChangePrevious()
+    {
+        ChangeState(previousState);
     }
 
     // Update is called once per frame

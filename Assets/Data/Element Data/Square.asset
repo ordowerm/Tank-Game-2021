@@ -18,3 +18,5 @@ MonoBehaviour:
     type: 3}
   primary: {r: 0.9019608, g: 0.62352943, b: 0, a: 1}
   secondary: {r: 0, g: 0, b: 0, a: 0}
+  elemTexture: {fileID: 2800000, guid: d337f14791db55a4c95552eee305e2b7, type: 3}
+  textureScale: 1

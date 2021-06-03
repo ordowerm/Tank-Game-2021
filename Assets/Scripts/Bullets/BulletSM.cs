@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 //Default state machine class for bullet movement
-public class BulletMovement : GameStateMachine
+public class BulletSM : GameStateMachine
 {
     protected bool started; //if set to false, don't use update methods.
     public void StartBullet() {
@@ -17,6 +17,7 @@ public class BulletMovement : GameStateMachine
     protected SpriteRenderer sprite;
     public Rigidbody2D rb;
     protected Vector2 dir;
+    public Collider2D col;
 
     //Particle control
     public TrailRenderer trail;
@@ -31,6 +32,11 @@ public class BulletMovement : GameStateMachine
     public BulletDestroyState destState;
     public BulletHitState hitState;
     public BulletBounceState bounceState;
+
+    //Miscellaneous vars
+    protected float timer = 0; //pass this for lifespan states
+    public int sourcePlayerId=0;
+    public LevelManager mgmt;
 
     protected void Awake()
     {
@@ -101,4 +107,31 @@ public class BulletMovement : GameStateMachine
     {
         if (started) { base.FixedUpdate(); }
     }
+
+    public void SetHitboxActive(bool val)
+    {
+        col.enabled = val;
+    }
+
+    public float GetTimer() { return timer; }
+    public void SetTimer(float v) { timer = v; }
+
+    protected void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            EnemyStateMachine esm = collision.gameObject.GetComponent<EnemyStateMachine>();
+            if (bdata.element.Equals(esm.data.element))
+            {
+                //Debug.Log("Successful hit");
+                ChangeState(hitState);
+            }
+            else
+            {
+                //Debug.Log("Wrong weapon");
+                ChangeState(bounceState);
+            }
+        }
+    }
+
 }

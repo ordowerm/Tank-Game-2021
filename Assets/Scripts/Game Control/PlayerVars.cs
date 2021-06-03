@@ -12,7 +12,15 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerVars
 {
-    public string PlayerName;
-    public int PlayerNumber;
-
-}
+    public string playerName;
+    public int playerNumber;
+    public float playerHealth;
+    public float playerMaxHealth;
+    public int playerScore;
+    public Color skinTint;
+    public Color hairColor;
+    public Sprite hairSprite;
+    public PlayerParameters playerParameters;
+    public WeaponData weapondata;
+    public IControllerInput cont;
+ }

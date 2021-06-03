@@ -53,6 +53,7 @@ MonoBehaviour:
   levelManager: {fileID: 0}
   bdata: {fileID: 11400000, guid: fd95d7ee238d7b54f957cd25c199111c, type: 2}
   rb: {fileID: 2224327244541938820}
+  col: {fileID: 1536551144134640461}
   trail: {fileID: 1190110024433380706}
   startParticle: {fileID: 3334715674733445487}
   hitParticle: {fileID: 0}
@@ -77,7 +78,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

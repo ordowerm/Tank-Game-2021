@@ -18,6 +18,7 @@ public class PlayerUIPaneMgmt : MonoBehaviour
     public Image PortraitFace; //reference to the player portrait. Update skin color as needed.
     public Image PortraitHair; //reference to the player potrait's hair. Update style and color as needed.
     public Image WeaponIcon; //reference to the picture of the bullet type.
+    public Image PortraitBg;
 
     //Health display
     /*
@@ -199,13 +200,23 @@ public class PlayerUIPaneMgmt : MonoBehaviour
         PlayerScoreText.text = newtext;
     }
 
-
-
     //Set image to match weapon
     public void SetWeaponGraphic(BulletData w)
     {
         WeaponIcon.sprite = w.sprite;
         WeaponIcon.color = w.element.primary;
+        PortraitBg.color = w.element.primary;
+    }
+
+    //Call in LevelManager
+    public void UpdateFromPlayerVar(PlayerVars p)
+    {
+        CurrentHealth = p.playerHealth;
+        MaxHealth = p.playerMaxHealth;
+        SetPlayerName(p.playerName);
+        SetHairdo(p.hairSprite,p.hairColor);
+        UpdateSkinColor(p.skinTint);
+
     }
 
 

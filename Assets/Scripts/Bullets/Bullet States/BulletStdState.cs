@@ -22,14 +22,14 @@ public class BulletStdState : BulletState
         //If at end of lifespan, switch to the destroy state
         if (timer > bd.lifespan)
         {
-            ((BulletMovement)sm).ChangeState(((BulletMovement)sm).destState);
+            ((BulletSM)sm).ChangeState(((BulletSM)sm).destState);
             return;
         }
     }
     public override void OnEnter()
     {
         base.OnEnter();
-        rb.velocity = ((BulletMovement)sm).GetInitialDirection();
+        rb.velocity = ((BulletSM)sm).GetInitialDirection();
         timer = 0;
         rb.velocity *= bd.speed;
     }

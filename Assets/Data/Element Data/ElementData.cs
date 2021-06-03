@@ -10,4 +10,6 @@ public class ElementData : ScriptableObject
     public Sprite reticleSprite;
     public Color primary;
     public Color secondary;
+    public Texture2D elemTexture;
+    public float textureScale;
 }

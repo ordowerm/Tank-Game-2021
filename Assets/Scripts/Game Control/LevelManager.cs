@@ -7,6 +7,8 @@ public class LevelManager : MonoBehaviour
     public bool sceneActive;
     public GameObject[] enemyObjects; //for testing purposes
     public GameObject[] playerDudes; //for testing purposes
+    public PlayerVars[] playerVars; //stores current values of player parameters
+
 
     protected Dictionary<int, GameObject> enemyList;
     protected Dictionary<int, GameObject> playerList;
@@ -39,6 +41,7 @@ public class LevelManager : MonoBehaviour
 
     }
 
+    //Send information of active enemies to the players 
     public void UpdatePlayerEnemyLists()
     {
         foreach (KeyValuePair<int,GameObject> p in playerList)
@@ -48,6 +51,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    //When enemies are destroyed, call this from their OnDestroy method to tell the LevelManger to update the enemy list.
     public void NotifyEnemyDestroyed(int id)
     {
         enemyList.Remove(id);
@@ -56,6 +60,7 @@ public class LevelManager : MonoBehaviour
         UpdatePlayerEnemyLists();
     }
 
+    //Gets the enemy list
     public Dictionary<int,GameObject> GetEnemyList()
     {
         return enemyList;
@@ -63,19 +68,20 @@ public class LevelManager : MonoBehaviour
 
 
 
+
+
     /*
      * Functionality related to funky camera stuff
      * 
      */
+    /*
     public bool useFunkyCamera;
     public Camera mainCamera;
     public float maxCamAngle; 
     float maxElevation; //maximum elevation for camera
     public float playerMaxY;
     public Vector3 origin;
-    public GameObject[] nonRotatables; //list of objects that should not be rotated
-    
-    
+    public GameObject[] nonRotatables; //list of objects that should not be rotated 
     protected float GetPlayerAverageY()
     {
         float result = 0;
@@ -103,6 +109,7 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
+    */
 
     private void Update()
     {
@@ -127,10 +134,10 @@ public class LevelManager : MonoBehaviour
 
         }
 
-        if (useFunkyCamera)
+        /*if (useFunkyCamera)
         {
             AdjustCameraY();
-        }
+        }*/
     }
 
 }

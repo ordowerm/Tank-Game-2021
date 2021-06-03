@@ -23,6 +23,11 @@ public class WeaponScript : MonoBehaviour
     public float reticleMinScale; //size when not locked on
     public float reticleMaxScale; //size when locked on
 
+    //Reference to level manager. Pass this to bullets so that score can update appropriately
+    public int sourcePlayerId = 0;
+    public LevelManager mgmt;
+
+
 
     protected void Awake()
     {
@@ -116,11 +121,13 @@ public class WeaponScript : MonoBehaviour
         spawned.transform.localPosition = wdata[weaponId].spriteOffset;
         spawned.transform.SetParent(null);
 
-        BulletMovement bulletSm = spawned.GetComponent<BulletMovement>();
+        BulletSM bulletSm = spawned.GetComponent<BulletSM>();
         bulletSm.SetBulletData(wdata[weaponId].bullettype);
         bulletSm.SetInitialDirection(transform.parent.rotation.eulerAngles.z);
         bulletSm.StartBullet();
         bulletSm.Initialize(bulletSm.stdState); //might have to change this to StartState, depending on where we go.
+        bulletSm.sourcePlayerId = sourcePlayerId;
+        bulletSm.levelManager = mgmt;
         shotTimer = 0; //reset shot timer
     }
 
