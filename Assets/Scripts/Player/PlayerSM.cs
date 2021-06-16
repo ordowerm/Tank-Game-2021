@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerSM : InputStateMachine
 {
+    
+
     public enum AnimationNumbers
     {
         STAND = 0, WALK, ROLL

@@ -2,14 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/*
+ This spawns a stage, based on stage data.
+ 
+ 
+ 
+ 
+ */
 public class LevelManager : MonoBehaviour
-{
+{  
+    public GameSettings settings; //On scene start, have the existing GameSettings instance pass a reference to itself into this LevelManager
+
+    //Prefabs for constructing the game objects
+    public GameObject uiMgmtPrefab;
+    public GameObject playerPrefab;
+    public StageData stageData;
+
+    //Instances of each prefab
+    GameObject uiMgmt;
+
+    //Runtime Variables
     public bool sceneActive;
+
+
     public GameObject[] enemyObjects; //for testing purposes
     public GameObject[] playerDudes; //for testing purposes
     public PlayerVars[] playerVars; //stores current values of player parameters
 
-
+    //Variables for facilitating lock-on functionality
     protected Dictionary<int, GameObject> enemyList;
     protected Dictionary<int, GameObject> playerList;
     protected Queue<int> returnedEnemyIds; //when an enemy is destroyed, return its ID number to a pool
@@ -18,7 +39,21 @@ public class LevelManager : MonoBehaviour
     public LevelUIManager levelUI;
     public float timeLimit; //timer's maximum value
     float timer;
+
+
+    //Methods for building the stage from the stage data
+    public void SetUpScene()
+    {
+        InstantiateUI();
+    } 
     
+    //Helper functions to call in SetUpScene()
+    void InstantiateUI()
+    {
+        uiMgmt = Instantiate(uiMgmtPrefab);
+        levelUI = uiMgmt.GetComponent<LevelUIManager>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,6 +101,8 @@ public class LevelManager : MonoBehaviour
         return enemyList;
     }
 
+
+    
 
 
 

@@ -12,6 +12,7 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerVars
 {
+    public bool isActive; //if this is set to false, then a prefab based on this player should not be spawned
     public string playerName;
     public int playerNumber;
     public float playerHealth;

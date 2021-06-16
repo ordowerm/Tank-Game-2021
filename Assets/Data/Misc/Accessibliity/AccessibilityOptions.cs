@@ -2,7 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Accessibility Settings",menuName = "GameParams/Accessibility Options")]
+
+/*
+ * This stores some presets for accessibility options.
+ * 
+ * 
+ */
+
+[CreateAssetMenu(fileName = "Accessibility Settings",menuName = "Game Parameters/Accessibility Options")]
 public class AccessibilityOptions : ScriptableObject
 {
     [System.Serializable]
@@ -19,4 +26,7 @@ public class AccessibilityOptions : ScriptableObject
         GRAYSCALE, //palettes designed for total color deficiency
         USE_PATTERNS //high-contrast settings that uses stuff like polka dots and stripes to distinguish enemy elements
     }
+
+    public MagnifyTextMode magnify;
+    public ShaderStyle shader;
 }

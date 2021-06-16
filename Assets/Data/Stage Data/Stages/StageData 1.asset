@@ -12,3 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ebefb1186f0ebb4094e06c51e6694a7, type: 3}
   m_Name: StageData 1
   m_EditorClassIdentifier: 
+  regions:
+  - reg:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 5
+      height: 5
+    waves: []
+  bgs: []

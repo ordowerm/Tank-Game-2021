@@ -2,7 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="PlayerParams", menuName ="GameParameters/PlayerParams")]
+
+
+/*
+ * 
+ * This script mostly contains physics constants for use by player-controlled characters.
+ * Player State Machine (PlayerSM) should maintain a reference to these settings.
+ * Indivdual PlayerStates should request their parent PlayerSM's reference to this script and then use it to perform their actions.
+ * 
+ */
+
+[CreateAssetMenu(fileName ="PlayerParams", menuName ="Game Parameters/Player Physics Params")]
 public class PlayerParameters : ScriptableObject
 {
     public float walkspeed;
