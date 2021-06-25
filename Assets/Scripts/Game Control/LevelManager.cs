@@ -24,6 +24,7 @@ public class LevelManager : MonoBehaviour
 
     //Runtime Variables
     public bool sceneActive;
+    public BorderController border;
 
 
     public GameObject[] enemyObjects; //for testing purposes
@@ -45,6 +46,10 @@ public class LevelManager : MonoBehaviour
     public void SetUpScene()
     {
         InstantiateUI();
+        levelUI.SpawnPlayerPanes(settings.playerVars);
+        border.SetSceneCamera(levelUI.mainCamera); //send reference of scene camera to wall object
+        SpawnPlayers();
+        
     } 
     
     //Helper functions to call in SetUpScene()
@@ -71,6 +76,7 @@ public class LevelManager : MonoBehaviour
         {
             playerList.Add(i, playerDudes[i]);
         }
+
 
         timer = timeLimit;
 
@@ -102,16 +108,43 @@ public class LevelManager : MonoBehaviour
     }
 
 
-    
-
-
-
 
     /*
-     * Functionality related to funky camera stuff
+     * Call when loading stage to spawn players
+     * 
+     * How it works:
+     * Spawns an instance of the Player prefab, then grabs its PlayerSM and SkinAttributes scripts.
+     * It assigns values to those scripts based on the values in the attached settings object.
+     * 
      * 
      */
+    public void SpawnPlayers()
+    {
+        int i = 0;
+        foreach (PlayerVars p in settings.playerVars)
+        {
+            //Spawn player if the corresponding playerVars is active
+            if (p.isActive)
+            {
+                GameObject newPlayerGuy = Instantiate(playerPrefab);
+                SkinAttributes skin = newPlayerGuy.GetComponent<SkinAttributes>();
+                skin.SetPlayerStyle(p);
+                PlayerSM playerSM = newPlayerGuy.GetComponent<PlayerSM>();
+                playerSM.playerId = i;
+                playerSM.levelManager = this;
+                playerList.Add(i, newPlayerGuy);
+            }
+            
+            i++;
+        }
+    }
+
+
+
     /*
+     * Functionality related to funky camera stuff that I got rid of.
+     * It was causing motion sickness.
+     * 
     public bool useFunkyCamera;
     public Camera mainCamera;
     public float maxCamAngle; 
@@ -161,7 +194,6 @@ public class LevelManager : MonoBehaviour
                 timer = 0;
                 sceneActive = false;
                 levelUI.SetTimerText("Time\'s Up!");
-                //Time.timeScale = 0.3f;
             }
             else
             {
@@ -170,11 +202,7 @@ public class LevelManager : MonoBehaviour
             }
 
         }
-
-        /*if (useFunkyCamera)
-        {
-            AdjustCameraY();
-        }*/
+               
     }
 
 }

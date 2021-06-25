@@ -52,7 +52,7 @@ public class PlayerSM : InputStateMachine
 
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         lockOnList = new List<GameObject>();
         walkState = new PlayerWalkState(this.gameObject, this,keyconfig,arm,gun);

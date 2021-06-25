@@ -29,13 +29,26 @@ public class SkinAttributes : MonoBehaviour
         faceImage.color = skintint;
     }
 
+    //function for updating player graphics from playerVars
+    public void SetPlayerStyle(PlayerVars p)
+    {
+        for (int i = 0; i < skinobjects.Length; i++)
+        {
+            skinobjects[i].GetComponent<SpriteRenderer>().color = p.skinTint;
+        }
+        SpriteRenderer hair = hairobject.GetComponent<SpriteRenderer>();
+        hair.sprite = p.hairSprite;
+        hair.color = p.hairColor;
+        //hairImage.sprite = hairtop;
+        //faceImage.color = skintint;
+    }
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-        SetPlayerStyle();
+        //SetPlayerStyle();
     }
 
     // Update is called once per frame

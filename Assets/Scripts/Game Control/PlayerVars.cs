@@ -17,7 +17,7 @@ public class PlayerVars
     public int playerNumber;
     public float playerHealth;
     public float playerMaxHealth;
-    public int playerScore;
+    public uint playerScore;
     public Color skinTint;
     public Color hairColor;
     public Sprite hairSprite;

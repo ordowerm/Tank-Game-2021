@@ -40,7 +40,7 @@ public class DebugColorSwitching : MonoBehaviour
             if (modifyskin)
             {
                 skinid++;
-                skinid = skinid % skins.colors.Length;
+                skinid = skinid % skins.pairs.Length;
                 Debug.Log("skin number: " + skinid);
             }
             else
@@ -50,7 +50,7 @@ public class DebugColorSwitching : MonoBehaviour
                 Debug.Log("Hair number:" +hairid);
             }
 
-            attr.skintint = skins.colors[skinid];
+            attr.skintint = skins.pairs[skinid].color;
             attr.hairtop = hairtops.sprites[hairid];
             attr.SetPlayerStyle();
         }

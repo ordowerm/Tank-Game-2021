@@ -101,6 +101,7 @@ public class GlobalGameMgmt : MonoBehaviour
         {
             levelMgmt.stageData = sd;
         }
+        
         levelMgmt.SetUpScene();
     }
 

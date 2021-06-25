@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6730f5ef40b99604993c650d33bcf269, type: 3}
   m_Name: Skin Color Set
   m_EditorClassIdentifier: 
+  description: Possible skin tones for character
   colors:
   - {r: 1, g: 0.9184636, b: 0.8443396, a: 1}
   - {r: 1, g: 0.82903415, b: 0.6650944, a: 1}
@@ -21,3 +22,24 @@ MonoBehaviour:
   - {r: 0.764151, g: 0.37883374, b: 0.09011213, a: 1}
   - {r: 0.6226415, g: 0.2977585, b: 0.16153437, a: 1}
   - {r: 0.3584906, g: 0.17004932, b: 0.06933072, a: 1}
+  pairs:
+  - tag: white
+    color: {r: 1, g: 1, b: 1, a: 1}
+  - tag: 
+    color: {r: 1, g: 0.9176471, b: 0.8431373, a: 1}
+  - tag: 
+    color: {r: 1, g: 0.82745105, b: 0.6666667, a: 1}
+  - tag: 
+    color: {r: 1, g: 0.6901961, b: 0.3647059, a: 1}
+  - tag: 
+    color: {r: 1, g: 0.52156866, b: 0.28627452, a: 1}
+  - tag: 
+    color: {r: 1, g: 0.8000001, b: 0.49411768, a: 1}
+  - tag: 
+    color: {r: 0.76470596, g: 0.3803922, b: 0.09019608, a: 1}
+  - tag: 
+    color: {r: 0.62352943, g: 0.29803923, b: 0.16078432, a: 1}
+  - tag: 
+    color: {r: 0.35686275, g: 0.16862746, b: 0.07058824, a: 1}
+  - tag: sunburnt
+    color: {r: 1, g: 0.3915094, b: 0.4605636, a: 1}

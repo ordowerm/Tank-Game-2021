@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /*
- Manages camera scaling for UI, as well as some other stuff, potentially.
+ This script should be placed in the Game UI prefab present in each level of "real" gameplay (as opposed to the title screen, etc.)
 
- All of this can be accomplished through an animation controller/animations,
- but manually editing the values in the animation clips, key-by-key, value-by-value
- is pretty cumbersome.
+    It performs the following tasks:
+    - runs a coroutine that arranges the cameras on screen to match a target aspect ratio. It also applies letterboxing
+    - controls an animation in which the HUD slides offscreen, and a pane for displaying in-game dialogue appears
+    - contains methods, to be called from the scene's LevelManager script, that in turn update the UI displayed in the HUD
  
  */
 public class LevelUIManager : MonoBehaviour
@@ -33,29 +34,36 @@ public class LevelUIManager : MonoBehaviour
     public GameObject timerPaneTemplate;
 
     //Runtime variables:
+    public LevelManager mgmt;
     float screenAspect; //current aspect ratio of the window camera
+    bool messageVisible = false; //if this flag is true, then the animation should advance until animTimer reaches scaleTime
+    public PlayerUIPaneMgmt[] playerPanes; //references to each player pane in the HUD. Eventually, we may want to programmatically spawn them on Awake.
 
 
-
-
+    //Animation-related parameters
+    public bool useHUDAnimation; //toggles the animation in which the HUD and dialogue boxes slide on/off screen
     public float UIWindowScaleTime; //time, in seconds, required to complete scaling
-    public PlayerUIPaneMgmt[] playerPanes;
-    public bool fixCameraAspectRatio; //adds borders to the main camera viewport to ensure fixed field of view
-    public float targetCameraWidth;
+    float animTimer = 0; //time elapsed during animation
 
-    
-    float animTimer = 0;
-    bool messageVisible=false; //if this flag is true, then the animation should advance until animTimer reaches scaleTime
 
-    public Text timerText;
+
+
+    //MGMT of Timer UI Pane:
+    public Text timerText; //Reference to the Text UI Element containing the "Seconds Remaining" stuff.   
+    //Sets the timer to display in the correct format and updates the text
     public void SetTimerText(float f)
     {
         timerText.text = string.Format("{0:0.0}", f);
     }
+
+    //Sets the timer to display a message
     public void SetTimerText(string s)
     {
         timerText.text = s;
     }
+    
+    
+    //Toggles whether the bottom UI pane should be shown. If the bottom pane is shown, the top pane should be invisble.
     public void ShowMessage(bool isTrue)
     {
         messageVisible = isTrue;
@@ -63,6 +71,7 @@ public class LevelUIManager : MonoBehaviour
         Debug.Log("Message visible: " + messageVisible);
     }
 
+    //Updates the weapon displayed on the Player's UI pane, given the corresponding bullet data and playerId
     public void UpdateUIPaneWeaponDisplay(int playerId, BulletData bd)
     {
         if (playerId >= 0 && playerId < playerPanes.Length)
@@ -70,52 +79,18 @@ public class LevelUIManager : MonoBehaviour
             playerPanes[playerId].SetWeaponGraphic(bd);
         }
     }
-              
-    
-    void AdjustMainCameraViewport()
-    {
-        float normalizedWidth = mainCamera.rect.height / (2.0f * mainCamera.orthographicSize) * targetCameraWidth;
 
-    }
-    
+
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space)){
+        if (Input.GetKeyDown(KeyCode.Space)) {
             ShowMessage(!messageVisible);
+            DistributeCameras();
         }
-
-
-        if (
-            animTimer < UIWindowScaleTime
-            )
-        {
-            //advance animation timer 
-            animTimer += Time.deltaTime;
-            if (animTimer > UIWindowScaleTime) { animTimer = UIWindowScaleTime; }
-
-            //linearly interpolate camera sizes
-            float prop;
-            
-            if (messageVisible)
-            {
-                prop = animTimer / UIWindowScaleTime;
-            }
-            else
-            {
-                prop = 1 - (animTimer / UIWindowScaleTime);
-
-            }
-
-            mainCamera.rect = new Rect(0, prop * messageCamHeight, 1, (mainCameraHeight - prop * messageCamHeight));
-            bottomCamera.rect = new Rect(0, 0, 1, prop * messageCamHeight);            
-        }
-
-
-        //AdjustMainCameraViewport();
     }
 
-
+    //Called when object is spawned
     private void Awake()
     {
         //avoid user-error from setting a bad value in the editor for the variable targetAspect
@@ -123,6 +98,9 @@ public class LevelUIManager : MonoBehaviour
         {
             targetAspect = 1;
         }
+
+        messageCamHeight = topPaneHeight; //holdover from previous version;
+        DistributeCameras(); //set up initial camera bounds
 
         //start coroutines
         StartCoroutine(ResizeScreen());
@@ -138,10 +116,36 @@ public class LevelUIManager : MonoBehaviour
         }
     }
 
+    //Spawns player panes
+    public void SpawnPlayerPanes(PlayerVars[] p)
+    {
+        if (p.Length != 4)
+        {
+            Debug.LogError("Error: incorrect dimensions for player vars when spawning UI");
+            return;
+        }
 
-    
+        for (int i = 0; i<4;i++)
+        {
+            playerPanes[i].mgmt = this;
+            playerPanes[i].UpdateFromPlayerVar(p[i]);
+        }
+    }
 
-    //Coroutine for resizing screen at fixed intervals
+    //Called by PlayerUIPaneMgmt to update fields
+    public void UpdateUIParams(int id)
+    {
+        try
+        {
+            playerPanes[id].UpdateFromPlayerVar(mgmt.settings.playerVars[id]);
+        }
+        catch (System.ArgumentOutOfRangeException e)
+        {
+            Debug.LogError(e);
+        }
+    }
+
+    //Coroutine for resizing screen at fixed intervals + helper functions
     IEnumerator ResizeScreen()
     {
         for (; ; )
@@ -150,19 +154,86 @@ public class LevelUIManager : MonoBehaviour
             if (screenAspect != windowCamera.aspect)
             {
                 if (debug) { Debug.Log(TAG + "Resizing screen"); }
+                DistributeCameras();
 
-                if (windowCamera.aspect >= 1)
-                {
-                    mainCamera.rect = new Rect((1 - targetAspect / windowCamera.aspect) / 2.0f, 0, targetAspect / windowCamera.aspect, 1);
-                }
-                else
-                {
-                    mainCamera.rect = new Rect(0, (1 - targetAspect * windowCamera.aspect) / 2.0f, 1, targetAspect * windowCamera.aspect);
-                }
-                screenAspect = windowCamera.aspect;
+                
+            
             }
             yield return new WaitForSeconds(0.1f);
         }
         
     }
+
+    //Places the camera windows in their correct positions
+    void DistributeCameras()
+    {
+        float camX = (1 - targetAspect / windowCamera.aspect) / 2.0f;
+        float mainCamY = 0;
+        if (messageVisible)
+        {
+            mainCamY = messageCamHeight;
+        }
+
+
+        //Depending on whether the screen is wider than it is tall, or vice-versa, size the cameras differently
+        if (windowCamera.aspect >= 1) //wider than tall
+        {
+            topCamera.rect = new Rect(camX, mainCameraHeight + mainCamY, targetAspect / windowCamera.aspect, topPaneHeight);
+            mainCamera.rect = new Rect(camX, mainCamY, targetAspect / windowCamera.aspect, mainCameraHeight);
+            bottomCamera.rect = new Rect(camX, mainCamY - messageCamHeight, targetAspect / windowCamera.aspect, messageCamHeight);
+        }
+        else //taller than wide
+        {
+            /*
+             * When dealing with aspect ratios < 1, each Camera should have normalized viewport width = 1 and normalized viewport height = windowAspect/targetAspect
+             * 
+             */
+            float normalizedHeight = windowCamera.aspect / targetAspect;
+            float bottomY = (1.0f - normalizedHeight) / 2.0f; //highest point of the bottom black box of the letterboxing, in normalized space
+            
+            //
+            topCamera.enabled = !messageVisible;
+            bottomCamera.enabled = messageVisible;
+
+            topCamera.rect = new Rect(0, bottomY + normalizedHeight * (mainCamY+mainCameraHeight), 1,normalizedHeight* topPaneHeight);
+            mainCamera.rect = new Rect(0, bottomY+normalizedHeight*mainCamY, 1, normalizedHeight * mainCameraHeight);
+            bottomCamera.rect = new Rect(0, bottomY + normalizedHeight * (mainCamY-messageCamHeight), 1, normalizedHeight * messageCamHeight);
+            
+            
+        }
+        screenAspect = windowCamera.aspect;
+
+
+    }
+
+
+    //Animation function
+    void AnimateWindowPosition()
+    {
+        
+        //Animation timer should increase if message is visible and decrease if it's not.
+        //animTimer / UIWindowScaleTime should define the window offset in the DistributeCameras function
+        if (messageVisible) {
+            if (useHUDAnimation)
+            {
+                animTimer = 1;
+            }
+            else
+            {
+                animTimer = Mathf.Min(animTimer + Time.deltaTime, UIWindowScaleTime);
+            }
+        }
+        else
+        {
+            if (useHUDAnimation)
+            {
+                animTimer = 0;
+            }
+            else
+            {
+                animTimer = Mathf.Max(animTimer - Time.deltaTime, 0);
+            }
+        }
+    }
+    
 }

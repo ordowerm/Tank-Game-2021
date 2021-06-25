@@ -33,4 +33,5 @@ public class StageRegion
 {
     public Rect reg; //define x, y location, and size, where region is located
     public EnemyWave[] waves;
+    public Vector2[] playerSpawnLocations;
 }

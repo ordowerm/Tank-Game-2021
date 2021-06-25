@@ -20,11 +20,11 @@ public class ParallaxData
 //
 public class ParallaxLayers : ScriptableObject
 {
-    public ParallaxData[] layers;
+    public ParallaxData[] skyLayers;
     public float GetTotalHeight()
     {
         float result = 0;
-        foreach (ParallaxData d in layers)
+        foreach (ParallaxData d in skyLayers)
         {
             result += d.size.y;
         }

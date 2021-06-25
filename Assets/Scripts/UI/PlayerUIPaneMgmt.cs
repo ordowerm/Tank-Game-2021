@@ -4,21 +4,29 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-/*
- * Script for updating the UI panel during gameplay
- * The PlayerVars script should maintain a reference to this.
- * When values are updated, call methods in this script to update UI.
- */
+
 public class PlayerUIPaneMgmt : MonoBehaviour
 {
-    public Canvas canvas;
+    //Fields used for game mgmt
+    public PlayerUIPaneState paneState; //current state of this UI pane
+    public bool isActive;
+    public LevelUIManager mgmt;
+    int playerNumber;
+
+    //References to UI Objects
+    public Canvas canvas; //reference to the parent canvas on which the player pane is displayed
+    public GameObject[] UIRows; //UI rows to deactivate, as necessary, to hide certain parts of the UI
     public Text PlayerNameText;
     public Text PlayerScoreText;
-    const char numericDivider = ','; //used for localization purposes. In the US we divide every three digits of numbers > 0 with commas, but in other countries, it's periods or spaces
     public Image PortraitFace; //reference to the player portrait. Update skin color as needed.
     public Image PortraitHair; //reference to the player potrait's hair. Update style and color as needed.
     public Image WeaponIcon; //reference to the picture of the bullet type.
-    public Image PortraitBg;
+    public Image PortraitBg; //background/image mask for player portrait
+
+
+    //Miscellaneous parameters
+    const char numericDivider = ','; //used for localization purposes. In the US we divide every three digits of numbers > 0 with commas, but in other countries, it's periods or spaces. For this build, we set it as a constant, but if we localize for Europe, for example, we'll have to refactor this.
+
 
     //Health display
     /*
@@ -50,6 +58,8 @@ public class PlayerUIPaneMgmt : MonoBehaviour
         }
         UpdateHealth();
     }
+    
+    //Set health to fixed value
     public void SetHealth(float val, bool isMax)
     {
         if (isMax) {
@@ -60,51 +70,9 @@ public class PlayerUIPaneMgmt : MonoBehaviour
         }
         else { CurrentHealth = val; }
         UpdateHealth();
-    }
-    public void UpdateHealthOld()
-    {
-        float healthStep = MaxHealth / (float)HealthSections.Length; //amount of health, per segment
-        for (int i = 0; i < HealthSections.Length; i++)
-        {
-            //uncull health section
-            if (HealthSections[i].canvasRenderer.cull == true)
-            {
-                HealthSections[i].canvasRenderer.cull = false;
-            }
-
-            //get proportion of health section currently covered
-            float healthprop = (CurrentHealth - ((float)i) * healthStep) / healthStep;
-            //alt health prop
-
-
-            if (healthprop >= 1)
-            {
-                HealthSections[i].color = HealthMaxColor;
-            }
-            else if (
-                healthprop >= 0.5 &&
-                healthprop < 1
-                )
-            {
-                //HealthSections[i].color = HealthMidColor;
-                HealthSections[i].color = Color.Lerp(HealthMidColor, HealthMaxColor, 2.0f*healthprop-1);
-            }
-            else if (
-                healthprop > 0 &&
-                healthprop < 0.5
-                )
-            {
-                //HealthSections[i].color = HealthMinColor;
-                HealthSections[i].color = Color.Lerp(HealthMinColor, HealthMidColor,  healthprop/0.5f);
-            }
-            else
-            {
-                HealthSections[i].canvasRenderer.cull = true;
-            }
-        }
-
-    }
+    } 
     
+    //Colors health sections
     public void UpdateHealth()
     {
         float healthStep = MaxHealth / (float)HealthSections.Length; //amount of health, per segment
@@ -141,14 +109,15 @@ public class PlayerUIPaneMgmt : MonoBehaviour
                 
                 )
             {
-                //HealthSections[i].canvasRenderer.cull = true;
                 HealthSections[i].color = new Color(0, 0, 0, 0);
             }
         }
 
     }
 
-    //Other UI updates
+
+
+    //Player Portrait Updates
     public void UpdateSkinColor(Color skincolor)
     {
         PortraitFace.color = skincolor;
@@ -166,9 +135,10 @@ public class PlayerUIPaneMgmt : MonoBehaviour
     {
         PlayerNameText.text = name;
     }
+    //TO DO -- player damage animation
+
     
-    
-    //update score. add commas for the sake of good-ish grammar.
+    //Update displayed score. add commas for the sake of good-ish grammar.
     public void SetScore(uint score)
     {
         //if player surpasses max score, just leave it as is.
@@ -200,7 +170,7 @@ public class PlayerUIPaneMgmt : MonoBehaviour
         PlayerScoreText.text = newtext;
     }
 
-    //Set image to match weapon
+    //Set image and background color to match weapon
     public void SetWeaponGraphic(BulletData w)
     {
         WeaponIcon.sprite = w.sprite;
@@ -208,16 +178,95 @@ public class PlayerUIPaneMgmt : MonoBehaviour
         PortraitBg.color = w.element.primary;
     }
 
-    //Call in LevelManager
+    
+    
+    /*
+     * Call in LevelManager at start of stage, when spawning UI panes.
+     * Updates all of the UI parameters simultaneously, so we might want to be sparing about calling this outside of that context.
+    */
     public void UpdateFromPlayerVar(PlayerVars p)
     {
+        isActive = p.isActive;
+        playerNumber = p.playerNumber;
         CurrentHealth = p.playerHealth;
         MaxHealth = p.playerMaxHealth;
         SetPlayerName(p.playerName);
         SetHairdo(p.hairSprite,p.hairColor);
         UpdateSkinColor(p.skinTint);
+        SetScore(p.playerScore);
+        UpdateHealth();
+        SetWeaponGraphic(p.weapondata.bullettype);
 
+
+        //Set up initial state and UI Pane layout
+        if (isActive)
+        {
+            paneState = PlayerUIPaneState.PLAYER_ACTIVE;
+        }
+        else
+        {
+            paneState = PlayerUIPaneState.NO_PLAYER;
+            StateHelperPlayerInactive();
+
+        }
     }
 
+
+    /*
+     * Rearranges UI to match UIPaneState when the UIPaneState is changed.
+     * 
+     */
+    public void SetUIPaneState(PlayerUIPaneState ps)
+    {
+        //If no change required, return
+        if (ps == paneState)
+        {
+            return;
+        }
+
+        switch (ps)
+        {
+            case PlayerUIPaneState.PLAYER_ACTIVE:
+                StateHelperPlayerActive();
+                break;
+            case PlayerUIPaneState.TIME_UP:
+            case PlayerUIPaneState.LEVEL_END:
+            case PlayerUIPaneState.GAME_OVER:
+                break;
+            default:
+            case PlayerUIPaneState.NO_PLAYER:
+                StateHelperPlayerInactive();
+                break;
+        }
+
+
+
+        paneState = ps;
+
+    }
+    //Helper functions for SetUIPaneState. Call in the switch statement of the SetUIPaneState method
+    void StateHelperPlayerActive()
+    {
+        //Enable all rows
+        foreach (GameObject g in UIRows)
+        {
+            g.SetActive(true);
+        }
+        if (!mgmt)
+        {
+            Debug.LogError("No LevelUIManager assigned.");
+        }
+        mgmt.UpdateUIParams(playerNumber); //update variables
+    }
+    void StateHelperPlayerInactive()
+    {
+        //Disable all rows
+        foreach (GameObject g in UIRows)
+        {
+            g.SetActive(false);
+        }
+
+        PlayerNameText.text="Player "+(playerNumber+1)+"\nPress Start";
+    }
 
 }
