@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class State
+public class GameState
 {
     protected GameObject target; //character or actor modified by the state
     protected GameStateMachine sm; //state machine
 
-    public State(GameObject t, GameStateMachine s) {
+    public GameState(GameObject t, GameStateMachine s) {
         target = t;
         sm = s;
    

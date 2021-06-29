@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletState : State
+public class BulletState : GameState
 {
     protected BulletData bd;
     public TrailRenderer trail;

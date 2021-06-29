@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputState : State
+public class InputState : GameState
 {
     protected IControllerInput cont;
 

@@ -10,7 +10,7 @@ using UnityEngine;
  
  
  */
-public class LevelManager : MonoBehaviour
+public class LevelManager : GameStateMachine
 {  
     public GameSettings settings; //On scene start, have the existing GameSettings instance pass a reference to itself into this LevelManager
 
@@ -26,6 +26,11 @@ public class LevelManager : MonoBehaviour
     public bool sceneActive;
     public BorderController border;
 
+    //FSM States
+    public LevelMGMTPregameState pregameState;
+    public LevelMGMTRunState runState;
+    public LevelMGMTPostgameState postgameState;
+
 
     public GameObject[] enemyObjects; //for testing purposes
     public GameObject[] playerDudes; //for testing purposes
@@ -39,17 +44,30 @@ public class LevelManager : MonoBehaviour
 
     public LevelUIManager levelUI;
     public float timeLimit; //timer's maximum value
-    float timer;
 
 
     //Methods for building the stage from the stage data
     public void SetUpScene()
     {
+        //Initialize maps
+        enemyList = new Dictionary<int, GameObject>();
+        playerList = new Dictionary<int, GameObject>();
+        returnedEnemyIds = new Queue<int>();
+
+        //Create game states
+        pregameState = new LevelMGMTPregameState(this.gameObject, this);
+        runState = new LevelMGMTRunState(this.gameObject, this);
+        postgameState = new LevelMGMTPostgameState(this.gameObject, this);
+
+        //Sets up the stage
         InstantiateUI();
         levelUI.SpawnPlayerPanes(settings.playerVars);
         border.SetSceneCamera(levelUI.mainCamera); //send reference of scene camera to wall object
         SpawnPlayers();
-        
+
+        //Marks scene as ready
+        Initialize(pregameState);
+        sceneActive = true;
     } 
     
     //Helper functions to call in SetUpScene()
@@ -59,28 +77,6 @@ public class LevelManager : MonoBehaviour
         levelUI = uiMgmt.GetComponent<LevelUIManager>();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        enemyList = new Dictionary<int, GameObject>();
-        playerList = new Dictionary<int, GameObject>();
-        returnedEnemyIds = new Queue<int>();
-
-        //Test game object notification, etc.
-        for (int i = 0; i<enemyObjects.Length; i++)
-        {
-            enemyObjects[i].GetComponent<EnemyStateMachine>().SetIDNumber(i);
-            enemyList.Add(i, enemyObjects[i]);
-        }
-        for (int i = 0; i < playerDudes.Length; i++)
-        {
-            playerList.Add(i, playerDudes[i]);
-        }
-
-
-        timer = timeLimit;
-
-    }
 
     //Send information of active enemies to the players 
     public void UpdatePlayerEnemyLists()
@@ -141,68 +137,80 @@ public class LevelManager : MonoBehaviour
 
 
 
-    /*
-     * Functionality related to funky camera stuff that I got rid of.
-     * It was causing motion sickness.
-     * 
-    public bool useFunkyCamera;
-    public Camera mainCamera;
-    public float maxCamAngle; 
-    float maxElevation; //maximum elevation for camera
-    public float playerMaxY;
-    public Vector3 origin;
-    public GameObject[] nonRotatables; //list of objects that should not be rotated 
-    protected float GetPlayerAverageY()
+    //Sends message to LevelUIManager
+    public void SendUIMessage(string s)
     {
-        float result = 0;
-        foreach (KeyValuePair<int,GameObject> k in playerList)
-        {
-            GameObject g = k.Value;
-            result += g.transform.position.y-origin.y;
-        }
-        result /= Mathf.Max(1, playerList.Count);
-
-        return result;
+        levelUI.EnqueueMessage(s);
+        levelUI.RunOverlayMessage();
     }
-    protected void AdjustCameraY()
+    public void SendUIMessages(string[] s)
     {
-        float prop = (playerMaxY+GetPlayerAverageY()) / (2.0f*playerMaxY); //proportion of max Y averaged by players
-        float theta = maxCamAngle-prop*maxCamAngle;
-        float newCamY = Mathf.Tan(theta * Mathf.PI / 180.0f) * (mainCamera.transform.position.z - origin.z); 
-        mainCamera.transform.position = new Vector3(origin.x, newCamY, mainCamera.transform.position.z);
-        mainCamera.transform.rotation = Quaternion.Euler(new Vector3(-theta, 0, 0));
-        foreach (GameObject g in nonRotatables)
+        //Debug.Log("Sending messages");
+        levelUI.EnqueueMessages(s);
+        levelUI.RunOverlayMessage();
+    }
+
+    override protected void Update()
+    {
+       if (sceneActive)
         {
-            if (g)
-            {
-                g.transform.rotation = Quaternion.Euler(new Vector3(-theta, 0, 0));
-            }
+            base.Update();
+        }
+       else
+        {
+            //Debug.Log("Scene not active");
         }
     }
-    */
 
-    private void Update()
+    protected override void FixedUpdate()
     {
         if (sceneActive)
         {
-            if (timer > 0)
-            {
-                timer -= Time.deltaTime;
-                levelUI.SetTimerText(timer);
-            }
-            else if (timer < 0) { 
-                timer = 0;
-                sceneActive = false;
-                levelUI.SetTimerText("Time\'s Up!");
-            }
-            else
-            {
-                levelUI.SetTimerText("Time\'s Up!");
-
-            }
+            base.FixedUpdate();
 
         }
-               
     }
 
 }
+
+
+
+/*
+ * Functionality related to funky camera stuff that I got rid of.
+ * It was causing motion sickness.
+ * 
+public bool useFunkyCamera;
+public Camera mainCamera;
+public float maxCamAngle; 
+float maxElevation; //maximum elevation for camera
+public float playerMaxY;
+public Vector3 origin;
+public GameObject[] nonRotatables; //list of objects that should not be rotated 
+protected float GetPlayerAverageY()
+{
+    float result = 0;
+    foreach (KeyValuePair<int,GameObject> k in playerList)
+    {
+        GameObject g = k.Value;
+        result += g.transform.position.y-origin.y;
+    }
+    result /= Mathf.Max(1, playerList.Count);
+
+    return result;
+}
+protected void AdjustCameraY()
+{
+    float prop = (playerMaxY+GetPlayerAverageY()) / (2.0f*playerMaxY); //proportion of max Y averaged by players
+    float theta = maxCamAngle-prop*maxCamAngle;
+    float newCamY = Mathf.Tan(theta * Mathf.PI / 180.0f) * (mainCamera.transform.position.z - origin.z); 
+    mainCamera.transform.position = new Vector3(origin.x, newCamY, mainCamera.transform.position.z);
+    mainCamera.transform.rotation = Quaternion.Euler(new Vector3(-theta, 0, 0));
+    foreach (GameObject g in nonRotatables)
+    {
+        if (g)
+        {
+            g.transform.rotation = Quaternion.Euler(new Vector3(-theta, 0, 0));
+        }
+    }
+}
+*/

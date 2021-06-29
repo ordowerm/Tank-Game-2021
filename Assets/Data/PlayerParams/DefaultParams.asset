@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefaultParams
   m_EditorClassIdentifier: 
   walkspeed: 5
-  rollspeed: 8
+  rollspeed: 10
   rolltime: 0.5
   rollcurve:
     serializedVersion: 2

@@ -17,7 +17,7 @@ using UnityEngine.UI;
  * 
  */
 
-public class PlayerSpriteCanvasName : MonoBehaviour
+public class ArrowForPlayerInGameUICanvas : MonoBehaviour
 {
     public VerticalLayoutGroup vert; //invert this when displayAbove is set to false;
     public Text nameText;

@@ -4,7 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
+/*
+ This class controls an individual player's "section" of the HUD at the top of the screen, during the main gameplay.
 
+
+ 
+ 
+ 
+ 
+ */
 public class PlayerUIPaneMgmt : MonoBehaviour
 {
     //Fields used for game mgmt

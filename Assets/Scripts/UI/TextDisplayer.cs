@@ -16,14 +16,15 @@ public class TextDisplayer : MonoBehaviour
     public int charactersPerDisplayStep_fast;
     public float confirmDelay; //delay before confirm button appears at the end of the textbox.
     public TextSpeed speed;
+    public SceneOverlayMessageUIScript sceneMessageUIScript;
 
     //References to UI objects
     public Text text;
 
-    float timer=0; //timer controlling the delay
-    string message=""; //entire string to eventually render
-    string textBuffer=""; //part of string to render
-    bool awaitingConfirmation=false;
+    float timer = 0; //timer controlling the delay
+    string message = ""; //entire string to eventually render
+    string textBuffer = ""; //part of string to render
+    bool awaitingConfirmation = false;
 
     public enum TextSpeed
     {
@@ -44,6 +45,12 @@ public class TextDisplayer : MonoBehaviour
         timer = 0;
         awaitingConfirmation = false;
     }
+    public void SetMessage(SceneOverlayMessage s){
+
+        speed = s.speed;
+        SetMessage(s.message);
+    }
+
 
     public void FillBuffer()
     {
@@ -69,7 +76,10 @@ public class TextDisplayer : MonoBehaviour
             }
             else
             {
-                awaitingConfirmation = true;
+                if (!awaitingConfirmation)
+                {
+                    awaitingConfirmation = true;
+                }
             }
         }
         
@@ -111,6 +121,19 @@ public class TextDisplayer : MonoBehaviour
                 FillBuffer();
                 timer = 0;
                 text.text = textBuffer;
+
+            }
+        }
+
+
+        if (message.Equals(textBuffer))
+        {
+            if (!awaitingConfirmation)
+            {
+                sceneMessageUIScript.ChangeState(SceneMessageState.AWAITING_TIMER);
+                awaitingConfirmation = true;
+
+
             }
         }
     }

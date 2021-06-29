@@ -5,13 +5,13 @@ using UnityEngine;
 public class GameStateMachine : MonoBehaviour
 {
     public bool debug;
-    protected State currentState;
-    protected State previousState; //for now, let's not include a full stack of states. Just use the most recent
+    protected GameState currentState;
+    protected GameState previousState; //for now, let's not include a full stack of states. Just use the most recent
     public LevelManager levelManager;
 
 
 
-    public void Initialize(State startState)
+    public void Initialize(GameState startState)
     {
         currentState = startState;
         currentState.OnEnter();
@@ -19,7 +19,7 @@ public class GameStateMachine : MonoBehaviour
     }
 
 
-    public virtual void ChangeState(State nextState)
+    public virtual void ChangeState(GameState nextState)
     {
         if (previousState != currentState)
         {

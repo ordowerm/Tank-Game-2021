@@ -6,6 +6,13 @@ using UnityEngine;
 public class GroundMeshData : ScriptableObject
 {
     public QuadData[] quads;
+
+    
+
+    
+
+
+
 }
 
 [System.Serializable]
@@ -14,4 +21,6 @@ public class QuadData
     public Material material;
     public Vector2[] vertices;
     public Vector2[] uvs;
+    public Vector2[] tileSize;
 }
+

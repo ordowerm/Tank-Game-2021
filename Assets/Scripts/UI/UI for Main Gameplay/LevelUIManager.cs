@@ -35,6 +35,7 @@ public class LevelUIManager : MonoBehaviour
 
     //Runtime variables:
     public LevelManager mgmt;
+    public SceneOverlayMessageUIScript sceneMessage;
     float screenAspect; //current aspect ratio of the window camera
     bool messageVisible = false; //if this flag is true, then the animation should advance until animTimer reaches scaleTime
     public PlayerUIPaneMgmt[] playerPanes; //references to each player pane in the HUD. Eventually, we may want to programmatically spawn them on Awake.
@@ -64,7 +65,7 @@ public class LevelUIManager : MonoBehaviour
     
     
     //Toggles whether the bottom UI pane should be shown. If the bottom pane is shown, the top pane should be invisble.
-    public void ShowMessage(bool isTrue)
+    public void ShowBottomPaneMessage(bool isTrue)
     {
         messageVisible = isTrue;
         animTimer = 0;
@@ -80,12 +81,28 @@ public class LevelUIManager : MonoBehaviour
         }
     }
 
+    //Enqueues messages into the SceneOverlayMessageUIScript
+    public void EnqueueMessage(string s)
+    {
+        sceneMessage.EnqueueMessageString(s);
+    }
+    public void EnqueueMessages(string[] s)
+    {
+        foreach (string st in s)
+        {
+            sceneMessage.EnqueueMessageString(st);
+        }
+    }
+    public void RunOverlayMessage()
+    {
+        sceneMessage.ChangeState(SceneMessageState.SCROLL_L_CENTER);
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            ShowMessage(!messageVisible);
+        if (Input.GetKeyDown(KeyCode.Space) && debug) {
+            ShowBottomPaneMessage(!messageVisible);
             DistributeCameras();
         }
     }
@@ -116,7 +133,7 @@ public class LevelUIManager : MonoBehaviour
         }
     }
 
-    //Spawns player panes
+    //Spawns player panes in Canvas in HUD
     public void SpawnPlayerPanes(PlayerVars[] p)
     {
         if (p.Length != 4)

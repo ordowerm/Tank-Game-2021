@@ -19,6 +19,12 @@ public class BorderController : MonoBehaviour
     Camera sceneCamera;
     public float colliderThickness;
 
+    //Background sprite
+    public Sprite bgSprite;
+    GameObject bgSpriteObject;
+    public Color bgTint;
+
+
     /*
      * Even though Unity's Gizmos functionality can show colliders, I have to switch to the scene view to see them during runtime.
      * Accordingly, here are some debug thingies for displaying the colliders during gameplay
@@ -120,6 +126,8 @@ public class BorderController : MonoBehaviour
             }
         }
 
+        ResizeBackgroundSprite(worldWidth, worldHeight);
+
         if (debug)
         {
             UseSpritesToDebugColliders();
@@ -134,6 +142,30 @@ public class BorderController : MonoBehaviour
         ResizeColliders();
     }
 
+
+    //Sizes the background sprite and places it in center of camera
+    public void ResizeBackgroundSprite(float w, float h)
+    {
+        SpriteRenderer sr;
+
+        if (!bgSpriteObject) {
+
+            bgSpriteObject = new GameObject();
+            sr = bgSpriteObject.AddComponent<SpriteRenderer>();
+            bgSpriteObject.name = "Background Sprite";
+            bgSpriteObject.transform.localScale = new Vector3(1, 1, 1);
+            sr.color = bgTint;
+            sr.sprite = bgSprite;
+            sr.drawMode = SpriteDrawMode.Sliced;
+            sr.sortingOrder = -10;
+        }
+        bgSpriteObject.transform.position = new Vector3(sceneCamera.transform.position.x, sceneCamera.transform.position.y, -3);
+        sr = bgSpriteObject.GetComponent<SpriteRenderer>();
+       
+        sr.size = new Vector2(w, h);
+    }
+
+
     private void Awake()
     {
         //Corrects collider thickness if an invalid value is provided
@@ -144,10 +176,5 @@ public class BorderController : MonoBehaviour
 
 
         SpawnWalls();
-    }
-
-    private void OnDrawGizmos()
-    {
-        //Gizmos.DrawWireCube()
     }
  }

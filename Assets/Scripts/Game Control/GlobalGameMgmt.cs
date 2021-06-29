@@ -36,15 +36,6 @@ public class GlobalGameMgmt : MonoBehaviour
         DontDestroyOnLoad(gameObject); //mark game manager as persistent across scenes
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (debugMode)
-        {
-
-        }
-    }
-
  
     //Sets the game settings from a file path
     public bool LoadGameSettingsFromFile(string path)
