@@ -8,8 +8,7 @@ using UnityEngine;
 
 public class BulletHitState : BulletState
 {
-    protected Collision2D col;
-    protected float timer = 0;
+    float fadeTimer = 0;
 
     public BulletHitState(GameObject t, GameStateMachine s, BulletData bdata) : base(t, s, bdata)
     {
@@ -20,22 +19,23 @@ public class BulletHitState : BulletState
     {
         base.OnEnter();
         ((BulletSM)sm).SetHitboxActive(false);
-        target.GetComponent<SpriteRenderer>().enabled = false;
-    }
-
-    public void SetCollision(Collision2D c)
-    {
-        col = c;
+        fadeTimer = ((BulletSM)sm).bdata.destroyTime;
+        rb.velocity = new Vector2(); //set velocity to zero
+        //target.GetComponent<SpriteRenderer>().enabled = false; //replace with destroy timer
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        timer += Time.deltaTime;
-        if (timer > bd.destroyTime)
+        fadeTimer = Mathf.Max(fadeTimer-Time.deltaTime,0);
+        Color color = ((BulletSM)sm).sprite.color;
+        ((BulletSM)sm).sprite.color = new Color(color.r,color.g,color.b,fadeTimer/((BulletSM)sm).bdata.destroyTime);
+        if (fadeTimer <= 0)
         {
             ((BulletSM)sm).ChangeState(((BulletSM)sm).destState);
         }
     }
+
+
 
 }

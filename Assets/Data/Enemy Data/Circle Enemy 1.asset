@@ -16,4 +16,16 @@ MonoBehaviour:
   element: {fileID: 11400000, guid: f92bad4f4127bb141816afcf38c767c9, type: 2}
   maxHp: 3
   iFrameTime: 0.2
-  ricochetTime: 0.2
+  ricochetTime: 0.1
+  walkColliderDimensions:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
+  hitboxColliderDimensions: []
+  animator: {fileID: 0}
+  baseSprite: {fileID: 21300000, guid: 33b638b7ed928bd4baf4a9239561e08d, type: 3}
+  scoreForHit: 1
+  scoreForDestroyParticipation: 2
+  scoreForDestroyed: 10

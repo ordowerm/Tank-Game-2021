@@ -376,7 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f792d37cab5f2b547bad53047b53483b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 0
+  debug: 1
   levelManager: {fileID: 1230468724}
   settings:
     playerVars: []

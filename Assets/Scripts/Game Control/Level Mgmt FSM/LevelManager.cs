@@ -6,7 +6,7 @@ using UnityEngine;
 /*
  This spawns a stage, based on stage data.
  
- 
+ It also manages the timing of each level
  
  
  */
@@ -25,6 +25,8 @@ public class LevelManager : GameStateMachine
     //Runtime Variables
     public bool sceneActive;
     public BorderController border;
+    int stageRegionNumber = 0; //index of currently-occupied area in the stage
+    int enemyWaveNumber = 0; //index of the current wave of enemies
 
     //FSM States
     public LevelMGMTPregameState pregameState;
@@ -46,7 +48,8 @@ public class LevelManager : GameStateMachine
     public float timeLimit; //timer's maximum value
 
 
-    //Methods for building the stage from the stage data
+
+    //Methods for building the stage from the stage data at the start of a scene
     public void SetUpScene()
     {
         //Initialize maps
@@ -75,35 +78,8 @@ public class LevelManager : GameStateMachine
     {
         uiMgmt = Instantiate(uiMgmtPrefab);
         levelUI = uiMgmt.GetComponent<LevelUIManager>();
+        levelUI.sceneMessage.levelManager = this; //pass reference to scene message manager
     }
-
-
-    //Send information of active enemies to the players 
-    public void UpdatePlayerEnemyLists()
-    {
-        foreach (KeyValuePair<int,GameObject> p in playerList)
-        {
-            PlayerSM psm = p.Value.GetComponent<PlayerSM>(); //obtain reference to each player's state machine
-            psm.SetEnemyPool();
-        }
-    }
-
-    //When enemies are destroyed, call this from their OnDestroy method to tell the LevelManger to update the enemy list.
-    public void NotifyEnemyDestroyed(int id)
-    {
-        enemyList.Remove(id);
-        returnedEnemyIds.Enqueue(id);
-        enemyCount--;
-        UpdatePlayerEnemyLists();
-    }
-
-    //Gets the enemy list
-    public Dictionary<int,GameObject> GetEnemyList()
-    {
-        return enemyList;
-    }
-
-
 
     /*
      * Call when loading stage to spawn players
@@ -130,36 +106,123 @@ public class LevelManager : GameStateMachine
                 playerSM.levelManager = this;
                 playerList.Add(i, newPlayerGuy);
             }
-            
+
             i++;
         }
     }
 
 
 
-    //Sends message to LevelUIManager
-    public void SendUIMessage(string s)
+
+    //Methods for keeping track of players and enemies
+    //Send information of active enemies to the players 
+    public void UpdatePlayerEnemyLists()
     {
-        levelUI.EnqueueMessage(s);
-        levelUI.RunOverlayMessage();
-    }
-    public void SendUIMessages(string[] s)
-    {
-        //Debug.Log("Sending messages");
-        levelUI.EnqueueMessages(s);
-        levelUI.RunOverlayMessage();
+        foreach (KeyValuePair<int,GameObject> p in playerList)
+        {
+            PlayerSM psm = p.Value.GetComponent<PlayerSM>(); //obtain reference to each player's state machine
+            psm.SetEnemyPool();
+        }
     }
 
+    //When enemies are destroyed, call this from their OnDestroy method to tell the LevelManger to update the enemy list.
+    public void NotifyEnemyDestroyed(int id)
+    {
+        enemyList.Remove(id);
+        returnedEnemyIds.Enqueue(id);
+        enemyCount--;
+        UpdatePlayerEnemyLists();
+
+        //If enemy count is down to 0, notify the current state that the enemy wave has ended
+        if (enemyCount < 1)
+        {
+            enemyWaveNumber++;
+            ((LevelMgmtState)currentState).NotifyEnemyWaveCleared();
+        }
+
+    }
+    
+    //The Stage Data defines various "regions" containing different enemy spawn behaviors. They're indexed by these methods:
+    public void AdvanceRegion()
+    {
+        enemyWaveNumber = 0;
+        stageRegionNumber++;
+    }
+    
+    
+
+    //Call when spawning a new enemy wave to display the number (+1, because humans usually count from 1)
+    public int GetWaveNumber() { return enemyWaveNumber+1; }
+    //Spawns a wave of enemies
+    public void SpawnEnemyWave() { 
+    
+    
+    
+    
+    
+    
+    }
+    
+    //Gets the enemy list
+    public Dictionary<int,GameObject> GetEnemyList()
+    {
+        return enemyList;
+    }
+
+
+
+    //Methods for updating other variables
+    public void IncrementPlayerScore(int playerId, int amt)
+    {
+        try
+        {
+            playerVars[playerId].playerScore += amt;
+            uiMgmt.GetComponent<LevelUIManager>().UpdateUIParams(playerId);
+        }
+        catch (System.ArgumentOutOfRangeException e)
+        {
+            Debug.Log("In IncrementPlayerScore: playerId out of a range: " + e);
+        }
+    }
+
+
+
+
+
+
+
+
+    //Methods for controlling the textbox that appears in the center of the playfield.
+    //Sends message to LevelUIManager
+    public void SendUIMessage(SceneOverlayMessage s)
+    {
+        levelUI.EnqueueOverlayMessage(s);
+        levelUI.RunOverlayMessage();
+    }
+    public void SendUIMessages(SceneOverlayMessage[] s)
+    {
+       // Debug.Log("LevelManager: Sending messages");
+        //Debug.Log(levelUI.ToString());
+        levelUI.EnqueueOverlayMessages(s);
+        levelUI.RunOverlayMessage();
+    }
+    //Call when scene overlay message is finished displaying
+    public void NotifySceneMessageFinishedRendering()
+    {
+        ((LevelMgmtState)currentState).NotifyMessageFinished();
+    }
+
+
+
+
+    //MonoBehaviour overrides
     override protected void Update()
     {
        if (sceneActive)
         {
             base.Update();
         }
-       else
-        {
-            //Debug.Log("Scene not active");
-        }
+      
     }
 
     protected override void FixedUpdate()

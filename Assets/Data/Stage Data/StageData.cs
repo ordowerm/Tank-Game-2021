@@ -16,16 +16,10 @@ public class StageData : ScriptableObject
 [Serializable]
 public class EnemySpawnData
 {
-    public GameObject enemy;
-    public Vector2 spawnLocation;
+    public GameObject enemy; //reference to the prefab we're spawning
+    public Vector2 spawnLocation; //local x-y offset, relative to the x,y coordinates of the StageRegion's Rect.
     public EnemyData edata;
-}
-
-[CreateAssetMenu(fileName = "StageData", menuName = "GameData/Stage Data/EnemyWave")]
-public class EnemyWave : ScriptableObject
-{
-    public bool spawnOnEnterRegion;
-    public EnemySpawnData[] enemies;
+    public EnemyStateMachine.Orientation orientation; //
 }
 
 [Serializable]

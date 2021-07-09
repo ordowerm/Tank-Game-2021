@@ -1525,6 +1525,8 @@ MonoBehaviour:
   bottomCamera: {fileID: 652111497616228846}
   playerPaneTemplate: {fileID: 0}
   timerPaneTemplate: {fileID: 0}
+  sceneMessagePrefab: {fileID: 7644333992702847887, guid: c88ff0ee444ce144e9fabbfd2fa2ee4d,
+    type: 3}
   mgmt: {fileID: 0}
   sceneMessage: {fileID: 5069522700099580153}
   playerPanes:
@@ -7841,12 +7843,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  levelManager: {fileID: 0}
   width: 0
   height: 0
   scrollMaxtime: 0
   textboxDelayTime: 0
-  textboxes: []
+  textDisplayer: {fileID: 0}
+  textObject: {fileID: 0}
   images: []
+  rt: {fileID: 0}
 --- !u!1 &652111498428422581
 GameObject:
   m_ObjectHideFlags: 0
@@ -13230,13 +13235,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayStepSpeed_slow: 0.4
-  displayStepSpeed_fast: 0.05
+  displayStepSpeed_fast: 0.07
   charactersPerDisplayStep_slow: 1
   charactersPerDisplayStep_fast: 1
-  confirmDelay: 0
   speed: 1
-  sceneMessageUIScript: {fileID: 5069522700099580153}
   text: {fileID: 712371321519702211}
+  listeners:
+  - {fileID: 6769250289891973448}
 --- !u!1 &5327717754647782212
 GameObject:
   m_ObjectHideFlags: 0
@@ -13893,10 +13898,9 @@ MonoBehaviour:
   displayStepSpeed_fast: 0.05
   charactersPerDisplayStep_slow: 1
   charactersPerDisplayStep_fast: 1
-  confirmDelay: 0
   speed: 1
-  sceneMessageUIScript: {fileID: 5069522700099580153}
   text: {fileID: 5174495413383667821}
+  listeners: []
 --- !u!1 &6268569871110809791
 GameObject:
   m_ObjectHideFlags: 0
@@ -14305,10 +14309,9 @@ MonoBehaviour:
   displayStepSpeed_fast: 0.05
   charactersPerDisplayStep_slow: 1
   charactersPerDisplayStep_fast: 1
-  confirmDelay: 0
   speed: 1
-  sceneMessageUIScript: {fileID: 5069522700099580153}
   text: {fileID: 6173109514567286920}
+  listeners: []
 --- !u!1 &6660031740915806036
 GameObject:
   m_ObjectHideFlags: 0
@@ -14465,17 +14468,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  levelManager: {fileID: 0}
   width: 40
   height: 20
   scrollMaxtime: 1
   textboxDelayTime: 1
-  textboxes:
-  - {fileID: 6634292438330863317}
-  - {fileID: 5089155544388630753}
-  - {fileID: 5938963443946136341}
+  textDisplayer: {fileID: 7118577250417846122}
+  textObject: {fileID: 5089155544388630753}
   images:
   - {fileID: 2826675293841665300}
   - {fileID: 7773959200200066585}
+  rt: {fileID: 0}
 --- !u!1 &6816882706449487770
 GameObject:
   m_ObjectHideFlags: 0

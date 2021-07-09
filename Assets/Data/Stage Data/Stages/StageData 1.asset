@@ -19,7 +19,8 @@ MonoBehaviour:
       y: 0
       width: 5
       height: 5
-    waves: []
+    waves:
+    - {fileID: 11400000, guid: 0e9c83e3a4f80d446a81fc692fd3d374, type: 2}
     playerSpawnLocations:
     - {x: 0, y: 0}
     - {x: 0, y: 0}

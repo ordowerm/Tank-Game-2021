@@ -32,12 +32,13 @@ public class LevelUIManager : MonoBehaviour
     //Prefabs
     public GameObject playerPaneTemplate; //reference to a player panel for displaying in the HUD at the top of the screen
     public GameObject timerPaneTemplate;
+    public GameObject sceneMessagePrefab;
 
     //Runtime variables:
     public LevelManager mgmt;
-    public SceneOverlayMessageUIScript sceneMessage;
+    public SceneOverlayMessageUIStateMachine sceneMessage;
     float screenAspect; //current aspect ratio of the window camera
-    bool messageVisible = false; //if this flag is true, then the animation should advance until animTimer reaches scaleTime
+    bool bottomPaneMessageVisible = false; //if this flag is true, then the animation should advance until animTimer reaches scaleTime
     public PlayerUIPaneMgmt[] playerPanes; //references to each player pane in the HUD. Eventually, we may want to programmatically spawn them on Awake.
 
 
@@ -45,9 +46,6 @@ public class LevelUIManager : MonoBehaviour
     public bool useHUDAnimation; //toggles the animation in which the HUD and dialogue boxes slide on/off screen
     public float UIWindowScaleTime; //time, in seconds, required to complete scaling
     float animTimer = 0; //time elapsed during animation
-
-
-
 
     //MGMT of Timer UI Pane:
     public Text timerText; //Reference to the Text UI Element containing the "Seconds Remaining" stuff.   
@@ -62,14 +60,14 @@ public class LevelUIManager : MonoBehaviour
     {
         timerText.text = s;
     }
-    
-    
+
+
     //Toggles whether the bottom UI pane should be shown. If the bottom pane is shown, the top pane should be invisble.
     public void ShowBottomPaneMessage(bool isTrue)
     {
-        messageVisible = isTrue;
+        bottomPaneMessageVisible = isTrue;
         animTimer = 0;
-        Debug.Log("Message visible: " + messageVisible);
+        if (debug) { Debug.Log("Message visible: " + bottomPaneMessageVisible); }
     }
 
     //Updates the weapon displayed on the Player's UI pane, given the corresponding bullet data and playerId
@@ -81,28 +79,29 @@ public class LevelUIManager : MonoBehaviour
         }
     }
 
-    //Enqueues messages into the SceneOverlayMessageUIScript
-    public void EnqueueMessage(string s)
+    //Enqueues messages into the SceneOverlayMessageUIStateMachine
+    public void EnqueueOverlayMessage(SceneOverlayMessage s)
     {
         sceneMessage.EnqueueMessageString(s);
     }
-    public void EnqueueMessages(string[] s)
+    public void EnqueueOverlayMessages(SceneOverlayMessage[] s)
     {
-        foreach (string st in s)
+        foreach (SceneOverlayMessage st in s)
         {
             sceneMessage.EnqueueMessageString(st);
         }
     }
     public void RunOverlayMessage()
     {
-        sceneMessage.ChangeState(SceneMessageState.SCROLL_L_CENTER);
+        
+        sceneMessage.StartMessageCycle();
     }
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && debug) {
-            ShowBottomPaneMessage(!messageVisible);
+            ShowBottomPaneMessage(!bottomPaneMessageVisible);
             DistributeCameras();
         }
     }
@@ -110,6 +109,9 @@ public class LevelUIManager : MonoBehaviour
     //Called when object is spawned
     private void Awake()
     {
+        //sceneMessage.Initialize(sceneMessage.inactiveState);
+       // Debug.Log("Reference exists: "+sceneMessage); 
+
         //avoid user-error from setting a bad value in the editor for the variable targetAspect
         if (targetAspect <= 0)
         {
@@ -131,6 +133,7 @@ public class LevelUIManager : MonoBehaviour
         {
             UIWindowScaleTime = 1;
         }
+
     }
 
     //Spawns player panes in Canvas in HUD
@@ -154,7 +157,7 @@ public class LevelUIManager : MonoBehaviour
     {
         try
         {
-            playerPanes[id].UpdateFromPlayerVar(mgmt.settings.playerVars[id]);
+            playerPanes[id].UpdateFromPlayerVar(mgmt.playerVars[id]);
         }
         catch (System.ArgumentOutOfRangeException e)
         {
@@ -186,7 +189,7 @@ public class LevelUIManager : MonoBehaviour
     {
         float camX = (1 - targetAspect / windowCamera.aspect) / 2.0f;
         float mainCamY = 0;
-        if (messageVisible)
+        if (bottomPaneMessageVisible)
         {
             mainCamY = messageCamHeight;
         }
@@ -209,8 +212,8 @@ public class LevelUIManager : MonoBehaviour
             float bottomY = (1.0f - normalizedHeight) / 2.0f; //highest point of the bottom black box of the letterboxing, in normalized space
             
             //
-            topCamera.enabled = !messageVisible;
-            bottomCamera.enabled = messageVisible;
+            topCamera.enabled = !bottomPaneMessageVisible;
+            bottomCamera.enabled = bottomPaneMessageVisible;
 
             topCamera.rect = new Rect(0, bottomY + normalizedHeight * (mainCamY+mainCameraHeight), 1,normalizedHeight* topPaneHeight);
             mainCamera.rect = new Rect(0, bottomY+normalizedHeight*mainCamY, 1, normalizedHeight * mainCameraHeight);
@@ -230,7 +233,7 @@ public class LevelUIManager : MonoBehaviour
         
         //Animation timer should increase if message is visible and decrease if it's not.
         //animTimer / UIWindowScaleTime should define the window offset in the DistributeCameras function
-        if (messageVisible) {
+        if (bottomPaneMessageVisible) {
             if (useHUDAnimation)
             {
                 animTimer = 1;

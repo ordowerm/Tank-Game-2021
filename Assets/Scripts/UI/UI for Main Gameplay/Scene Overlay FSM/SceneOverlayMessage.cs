@@ -11,12 +11,12 @@ public class SceneOverlayMessage
 {
     public string message;
     public TextDisplayer.TextSpeed speed;
-    public bool autoAdvance; //if the text should automatically advance to the next queued message, then this should be set to true; otherwise, the message will display until it is manually told to stop
+    public float messageDelay;
 
-    public SceneOverlayMessage(string t, TextDisplayer.TextSpeed s, bool a)
+    public SceneOverlayMessage(string t, TextDisplayer.TextSpeed s, float d)
     {
         message = t;
         speed = s;
-        autoAdvance = a;
+        messageDelay = d;
     }
 }

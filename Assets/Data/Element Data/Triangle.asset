@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b9a51cd09f522842abc24e5c1adac16, type: 3}
   m_Name: Triangle
   m_EditorClassIdentifier: 
+  element: 1
   idNumber: 1
   elemName: Triangle
   reticleSprite: {fileID: -2229122128910862035, guid: 819d5deb4bde4f049945f200096f258c,
     type: 3}
+  reticleOutlineSprite: {fileID: 4010916179293620139, guid: 6f0d867de5638aa43b59f5568f120c89,
+    type: 3}
   primary: {r: 0, g: 0.61960787, b: 0.4509804, a: 1}
   secondary: {r: 0, g: 1, b: 0, a: 1}
+  outlineColor: {r: 0, g: 0.47450984, b: 0.34509805, a: 1}
   elemTexture: {fileID: 2800000, guid: f38f33ca8f74a0840874dbad1485ca20, type: 3}
   textureScale: 4
+  explosionParticleSprite: {fileID: 146839049008219127, guid: 0598147909f3b2e4bb6e16385c4ecfa7,
+    type: 3}

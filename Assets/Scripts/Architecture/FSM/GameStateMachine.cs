@@ -11,7 +11,7 @@ public class GameStateMachine : MonoBehaviour
 
 
 
-    public void Initialize(GameState startState)
+    public virtual void Initialize(GameState startState)
     {
         currentState = startState;
         currentState.OnEnter();

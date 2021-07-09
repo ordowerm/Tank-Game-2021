@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class DebugPlayerPane : MonoBehaviour
 {
-    uint val = 0;
+    int val = 0;
     KeyCode plus1 = KeyCode.UpArrow;
     KeyCode minus1 = KeyCode.DownArrow;
     KeyCode plusMore = KeyCode.RightArrow;
     KeyCode minusMore = KeyCode.LeftArrow;
     public PlayerUIPaneMgmt mgmt;
     public ParamNameDebugPlayerPane param;
-    public uint incrVal=10; //value by which to increment larger changes
+    public int incrVal=10; //value by which to increment larger changes
 
     public enum ParamNameDebugPlayerPane
     {

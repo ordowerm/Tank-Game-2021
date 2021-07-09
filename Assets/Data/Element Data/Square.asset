@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b9a51cd09f522842abc24e5c1adac16, type: 3}
   m_Name: Square
   m_EditorClassIdentifier: 
+  element: 3
   idNumber: 3
   elemName: Square
   reticleSprite: {fileID: 8166880935265719746, guid: 819d5deb4bde4f049945f200096f258c,
     type: 3}
+  reticleOutlineSprite: {fileID: 4754280164016410150, guid: 6f0d867de5638aa43b59f5568f120c89,
+    type: 3}
   primary: {r: 0.9019608, g: 0.62352943, b: 0, a: 1}
-  secondary: {r: 0, g: 0, b: 0, a: 0}
+  secondary: {r: 0.96309555, g: 1, b: 0.0990566, a: 1}
+  outlineColor: {r: 0.69411767, g: 0.4784314, b: 0, a: 1}
   elemTexture: {fileID: 2800000, guid: d337f14791db55a4c95552eee305e2b7, type: 3}
   textureScale: 1
+  explosionParticleSprite: {fileID: -949334673909126261, guid: 0598147909f3b2e4bb6e16385c4ecfa7,
+    type: 3}

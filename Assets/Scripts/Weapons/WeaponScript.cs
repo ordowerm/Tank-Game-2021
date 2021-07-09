@@ -10,6 +10,7 @@ public class WeaponScript : MonoBehaviour
     }
     public WeaponData[] wdata;
     public GameObject reticle;
+    public GameObject reticleOutline; //with certain colors, it was hard to see the reticle. Initially I tried making a shader to generate this outline, but it was giving me unexpected behavior. Instead, I've just made a game object that displays a second, slightly bigger, white reticle right under the main reticle. Hacky? Yes. Functional? Also yes.
     public GameObject bullet1;
     public GameObject bullet2;
     public float defaultReticleDistance; //distance from gun for reticle to spawn when in gamepad mode
@@ -22,6 +23,7 @@ public class WeaponScript : MonoBehaviour
     //have the size of the reticle change when locked on
     public float reticleMinScale; //size when not locked on
     public float reticleMaxScale; //size when locked on
+    //public float reticleOutlineThickness; 
 
     //Reference to level manager. Pass this to bullets so that score can update appropriately
     public int sourcePlayerId = 0;
@@ -40,9 +42,33 @@ public class WeaponScript : MonoBehaviour
 
 
 
+    //Call in UpdateWeapon
+    protected void UpdateWeaponAndReticleSprites()
+    {
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        sprite.sprite = wdata[weaponId].weaponsprite;
+        sprite.color = wdata[weaponId].bullettype.element.primary;
+        SpriteRenderer retSprite = reticle.GetComponent<SpriteRenderer>();
+        retSprite.sprite = wdata[weaponId].bullettype.element.reticleSprite;
+        reticleOutline.GetComponent<SpriteRenderer>().sprite = wdata[weaponId].bullettype.element.reticleOutlineSprite; //update sprite for outline, too.
+        reticleOutline.GetComponent<SpriteRenderer>().color = wdata[weaponId].bullettype.element.outlineColor; //update sprite for outline, too.
+
+        retSprite.color = wdata[weaponId].bullettype.element.primary;
+
+    }
+    //Unused (as of 7/4) function that modifies shader parameters for the reticle, as opposed to modifying its sprite renderer directly.
+    //Since I stopped using the OutlineShader material (it was giving unexpected behavior), this isn't currently used.
+   protected void UpdateReticleShaders()
+    {
+        SpriteRenderer retSprite = reticle.GetComponent<SpriteRenderer>();
+        Material retMat = retSprite.material;
+        retMat.SetColor("_Color", wdata[weaponId].bullettype.element.primary);
+    }
+
     //Call this when changing weapons
     public void UpdateWeapon(WeaponName wn)
     {
+        //Set weapon
         switch (wn)
         {
             case WeaponName.WEAPON0:
@@ -56,19 +82,20 @@ public class WeaponScript : MonoBehaviour
                 weaponId = 2;
                 break;
         }
-        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-        SpriteRenderer retSprite = reticle.GetComponent<SpriteRenderer>();
-        sprite.sprite = wdata[weaponId].weaponsprite;
-        sprite.color = wdata[weaponId].bullettype.element.primary;
-        retSprite.sprite = wdata[weaponId].bullettype.element.reticleSprite;
-        retSprite.color = wdata[weaponId].bullettype.element.primary;
         
+        //Update weapon sprites
+        UpdateWeaponAndReticleSprites();
+        //UpdateReticleShaders();
+
+
+        /*
         //Attempt to turn on glow animation on reticle
         GlowAnimation g = reticle.GetComponent<GlowAnimation>();
         if (g)
         {
             g.c0 = wdata[weaponId].bullettype.element.primary;
         }
+        */
     }
     public BulletData GetBulletData() { return wdata[weaponId].bullettype; }
 

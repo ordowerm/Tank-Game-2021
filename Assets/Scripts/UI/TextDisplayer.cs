@@ -6,44 +6,69 @@ using UnityEngine.UI;
 /*
  * Renders text gradually into the textbox specified in the public field.
  * 
+ * Maintains a list of Observers to notify when a message is finished rendering
  * 
  */
 public class TextDisplayer : MonoBehaviour
 {
+    //Display preferences
     public float displayStepSpeed_slow; //delay before next character(s) displayed
     public float displayStepSpeed_fast;
-    public int charactersPerDisplayStep_slow;
+    public int charactersPerDisplayStep_slow; //number of characters added to buffer, per frame
     public int charactersPerDisplayStep_fast;
-    public float confirmDelay; //delay before confirm button appears at the end of the textbox.
     public TextSpeed speed;
-    public SceneOverlayMessageUIScript sceneMessageUIScript;
 
     //References to UI objects
     public Text text;
 
+    //Runtime variables that get modified
+    public GameObject[] listeners;
     float timer = 0; //timer controlling the delay
-    string message = ""; //entire string to eventually render
-    string textBuffer = ""; //part of string to render
-    bool awaitingConfirmation = false;
+    float delay; //current delay between calls to AppendCharactersToBuffer
+    string fullMessage = ""; //entire string to eventually render
+    string textBuffer = ""; //part of string to render on a given frame
+    bool coroutineRunning = false; //flag denoting that the text displayer should stop trying to add new characters
+    bool initialized = false;
 
+    //Enumeration allowing for different presets of text speed
     public enum TextSpeed
     {
         SLOW,
         FAST,
         SKIP
     }
-
-
     public void SetTextSpeed(TextSpeed t)
     {
         speed = t;
+        switch (speed)
+        {
+            case TextSpeed.FAST:
+                delay = displayStepSpeed_fast;
+                break;
+            case TextSpeed.SLOW:
+                delay = displayStepSpeed_slow;
+                break;
+            default:
+                delay = 0;
+                break;
+        }
     }
+
+
+
+    //Begin rendering
     public void SetMessage(string s)
     {
-        message = s;
-        ClearBuffer();
-        timer = 0;
-        awaitingConfirmation = false;
+        if (coroutineRunning)
+        {
+            Debug.Log("Coroutine stopped");
+            StopCoroutine(TextDisplayCoroutine()); //halt race conditions
+        }
+        fullMessage = s;
+        ClearBuffer(); //Clears buffer before repopulating it
+        //timer = 0; //resets timer
+        //awaitingConfirmation = false;
+        StartCoroutine(TextDisplayCoroutine());
     }
     public void SetMessage(SceneOverlayMessage s){
 
@@ -52,105 +77,117 @@ public class TextDisplayer : MonoBehaviour
     }
 
 
-    public void FillBuffer()
+    //Appends characters to current buffer
+    public void AppendCharactersToBuffer()
     {
         if (speed == TextSpeed.SKIP)
         {
-            textBuffer = message;
+            textBuffer = fullMessage;
             return;
         }
         
-        //set iterations
-        int iterations = charactersPerDisplayStep_slow;
+        //set number of characters to append
+        int lettersRenderedPerCycle = charactersPerDisplayStep_slow;
         if (speed == TextSpeed.FAST)
         {
-            iterations = charactersPerDisplayStep_fast;
+            lettersRenderedPerCycle = charactersPerDisplayStep_fast;
         }
 
-        //add characters to the message
-        for (int i = 0; i<iterations;i++)
+        //append individual characters to the message
+        for (int i = 0; i<lettersRenderedPerCycle;i++)
         {
-            if (textBuffer.Length < message.Length)
+            if (textBuffer.Length < fullMessage.Length)
             {
-                textBuffer += message[textBuffer.Length];
+                textBuffer += fullMessage[textBuffer.Length]; //Appends the next character of the message to the text buffer
             }
-            else
-            {
-                if (!awaitingConfirmation)
-                {
-                    awaitingConfirmation = true;
-                }
-            }
+          
         }
         
     }
+    
+    //Clears buffer
     public void ClearBuffer()
     {
         textBuffer = "";
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-       
-    }
 
-
+    //NOTE: replaced this with a coroutine
     //advances timer and renders if appropriate
+    //Eventually I might want to move this to a coroutine to improve performance
     void AdvanceTimer()
     {
-        float maxTime;
-        switch (speed)
+       
+        if (!coroutineRunning)
         {
-            case TextSpeed.FAST:
-                maxTime = displayStepSpeed_fast;
-                break;
-            case TextSpeed.SLOW:
-                maxTime = displayStepSpeed_slow;
-                break;
-            case TextSpeed.SKIP:
-            default:
-                maxTime = 0;
-                break;
-        }
-        if (!awaitingConfirmation)
-        {
-            timer = Mathf.Min(timer + Time.deltaTime, maxTime);
-            if (timer >= maxTime)
+            //Append characters to string and update Text component's text field
+            timer = Mathf.Min(timer + Time.deltaTime, delay);
+            if (timer >= delay)
             {
-                FillBuffer();
+                AppendCharactersToBuffer();
                 timer = 0;
                 text.text = textBuffer;
 
             }
-        }
 
-
-        if (message.Equals(textBuffer))
-        {
-            if (!awaitingConfirmation)
+            //Check if buffer is filled with the entire message. If it is, notify listeners and mark the rendering as complete
+            if (fullMessage.Length == textBuffer.Length) //I considered checking for an exact match between strings but didn't want the extra overhead
             {
-                sceneMessageUIScript.ChangeState(SceneMessageState.AWAITING_TIMER);
-                awaitingConfirmation = true;
-
-
+                coroutineRunning = true;
+                foreach (GameObject l in listeners)
+                {
+                    l.GetComponent<ITextDisplayListener>().NotifyTextRenderComplete(this);
+                }
             }
         }
+
+        
     }
+
+
+    //There currently aren't any protections against race conditions 
+    IEnumerator TextDisplayCoroutine()
+    {
+        //Debug.Log("Running TextDisplayCoroutine");
+        while (textBuffer.Length < fullMessage.Length )
+        {
+            coroutineRunning = true;
+            AppendCharactersToBuffer();
+            text.text = textBuffer;
+
+            //Check if buffer is filled with the entire message. If it is, notify listeners and mark the rendering as complete
+            if (fullMessage.Length == textBuffer.Length) //I considered checking for an exact match between strings but didn't want the extra overhead
+            {
+                //Debug.Log("TextDisplay buffer filled");
+                foreach (GameObject l in listeners)
+                {
+                    l.GetComponent<ITextDisplayListener>().NotifyTextRenderComplete(this);
+                }
+                coroutineRunning = false; //I think this should only call when the coroutine finishes, but I could be wrong.
+                yield return null;
+            }
+
+            yield return new WaitForSeconds(delay);
+        }
+    }
+
+
+
 
     // Update is called once per frame
     void Update()
     {
         //Test messaging:
-        if (Input.GetKeyDown(KeyCode.L))
+        
+        /*(Input.GetKeyDown(KeyCode.L))
         {
             SetMessage("This is a message to you, Rudy.");
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
             SetMessage("Better think of your future.");
-        }
+        }*/
 
-        AdvanceTimer();
+        //AdvanceTimer();
     }
 }

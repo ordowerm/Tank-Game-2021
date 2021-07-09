@@ -21,3 +21,6 @@ MonoBehaviour:
   EnemyBullet: 0
   lifespan: 0.5
   speed: 30
+  ricochetTime: 0.2
+  destroyTime: 0.05
+  power: 1

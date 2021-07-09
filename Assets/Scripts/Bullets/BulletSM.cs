@@ -8,15 +8,14 @@ public class BulletSM : GameStateMachine
 {
     protected bool started; //if set to false, don't use update methods.
     public void StartBullet() {
-        //Debug.Log("Started.");    
         started = true; 
     } //call in cannon/weapon script after inputting transform parameters
 
     //References to various components of the prefab
     public BulletData bdata;
-    protected SpriteRenderer sprite;
+    public SpriteRenderer sprite;
     public Rigidbody2D rb;
-    protected Vector2 dir;
+    protected Vector2 dir; //direction for the velocity vector
     public Collider2D col;
 
     //Particle control
@@ -35,12 +34,13 @@ public class BulletSM : GameStateMachine
 
     //Miscellaneous vars
     protected float timer = 0; //pass this for lifespan states
-    public int sourcePlayerId=0;
-    public LevelManager mgmt;
-
+    public int sourcePlayerId=0; //check this value during enemy collisions so that we can update the attacking player's score through the LevelManager
+    
+    
     protected void Awake()
     {
         started = false; //assume not started
+
 
         //Initialize visual components from bullet data
         sprite = GetComponent<SpriteRenderer>();
@@ -67,12 +67,30 @@ public class BulletSM : GameStateMachine
 
     }
 
+    //Call this in SetBulletData
+    protected void SetBulletSpriteAndColor()
+    {
+        sprite.sprite = bdata.sprite;
+        sprite.color = bdata.element.primary;
+    }
+
+    //Alternate method to call instead of SetBulletSpriteAndColor(), assuming I'm using the OutlineShader. As of 7/4, this I'm not using this due to unexpected behavior.
+    protected void SetBulletMaterialParams()
+    {
+        //Modify material to match shader
+        Material m = sprite.material;
+        m.SetTexture("_MainTex", bdata.sprite.texture);
+        m.SetColor("_Color", bdata.element.primary);
+    }
 
     public void SetBulletData(BulletData b)
     {
         bdata = b;
-        sprite.sprite = bdata.sprite;
-        sprite.color = bdata.element.primary;
+        
+        
+        SetBulletSpriteAndColor();
+        
+        //Sets the trail color for the bullet's TrailRenderer
         if (trail)
         {
             //trail.enabled = false;
@@ -88,6 +106,10 @@ public class BulletSM : GameStateMachine
         float y = Mathf.Sin(rot * Mathf.PI / 180.0f);
         //Debug.Log(new Vector2(x, y));
         dir = new Vector2(x,y);
+    }
+    public void SetInitialDirection(Vector2 v)
+    {
+        dir = v;
     }
 
     public Vector2 GetInitialDirection()
@@ -116,6 +138,12 @@ public class BulletSM : GameStateMachine
     public float GetTimer() { return timer; }
     public void SetTimer(float v) { timer = v; }
 
+    /*
+     * 
+     * Moved this functionality to enemy hitbox script
+     * 
+     * 
+     * 
     protected void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
@@ -132,6 +160,6 @@ public class BulletSM : GameStateMachine
                 ChangeState(bounceState);
             }
         }
-    }
+    }*/
 
 }

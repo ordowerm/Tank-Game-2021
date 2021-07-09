@@ -14,4 +14,5 @@ public class BulletData :ScriptableObject
     public float speed; //multiplier for when movement function is called
     public float ricochetTime; //lifespan  after ricochet (use for particle FX?)
     public float destroyTime; //lifespan after successful hit (use for particle FX)
+    public int power; //amount of hp to deduct from enemy upon hit
 }

@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b9a51cd09f522842abc24e5c1adac16, type: 3}
   m_Name: NullElement
   m_EditorClassIdentifier: 
+  element: 0
   idNumber: 0
   elemName: NullElement
   reticleSprite: {fileID: 21300000, guid: b68e37e3c2dab31449b536a9de347652, type: 3}
+  reticleOutlineSprite: {fileID: 0}
   primary: {r: 1, g: 1, b: 1, a: 1}
-  secondary: {r: 0, g: 0, b: 0, a: 0}
+  secondary: {r: 1, g: 1, b: 1, a: 1}
+  outlineColor: {r: 1, g: 1, b: 1, a: 0.54509807}
   elemTexture: {fileID: 2800000, guid: ee177c70aa6d30e4f984583702004c6d, type: 3}
   textureScale: 1

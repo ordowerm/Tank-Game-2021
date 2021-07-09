@@ -147,7 +147,7 @@ public class PlayerUIPaneMgmt : MonoBehaviour
 
     
     //Update displayed score. add commas for the sake of good-ish grammar.
-    public void SetScore(uint score)
+    public void SetScore(int score)
     {
         //if player surpasses max score, just leave it as is.
         if (score > 999999999)
