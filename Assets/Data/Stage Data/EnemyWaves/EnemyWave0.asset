@@ -14,6 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnOnEnterRegion: 0
   enemies:
-  - enemy: {fileID: 942351468495706685, guid: f7ff352eba81cac428b3be77a855bc2f, type: 3}
-    spawnLocation: {x: 0, y: 0}
+  - enemy: {fileID: 1229076205127023496, guid: b9415c120370e9d409119ae6f6dbc876, type: 3}
+    spawnLocation: {x: -3, y: 3}
     edata: {fileID: 11400000, guid: 81e7b7d10c21e7d42a64e939929ffe30, type: 2}
+    orientation: 0
+  - enemy: {fileID: 1229076205127023496, guid: b9415c120370e9d409119ae6f6dbc876, type: 3}
+    spawnLocation: {x: 3, y: -3}
+    edata: {fileID: 11400000, guid: 81e7b7d10c21e7d42a64e939929ffe30, type: 2}
+    orientation: 1

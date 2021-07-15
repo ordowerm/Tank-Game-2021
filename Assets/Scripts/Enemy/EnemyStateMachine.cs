@@ -18,7 +18,16 @@ public class EnemyStateMachine : GameStateMachine
     public EnemyData data;
     public SpriteRenderer[] sprites; //Reference to different sprite components. Modify shaders on each SpriteRenderer for certain VFX.
     public GameObject explosionPrefab; //reference to the explosion prefab
-    
+    Orientation orientation;
+    public void SetOrientation(Orientation o)
+    {
+        orientation = o;
+    }
+    public Orientation GetOrientation()
+    {
+        return orientation;
+    }
+
     //Runtime variables
     int health;
 
@@ -132,7 +141,7 @@ public class EnemyStateMachine : GameStateMachine
         {
             if (r.tag.Equals("EnemyBodyTag")) 
             {
-                Debug.Log("body found");
+                //Debug.Log("body found");
                 Material m = r.material;
                 m.SetColor("_MainColor", c);
             }
@@ -199,7 +208,7 @@ public class EnemyStateMachine : GameStateMachine
             )
 
         {
-            Debug.Log("In coroutine: timer = " + resistShaderTimer);
+            //Debug.Log("In coroutine: timer = " + resistShaderTimer);
             ResistShader(resistCoroutineActive, resistShaderTimer / period);
             resistShaderTimer += lilDeltaTime;
             yield return new WaitForSeconds(lilDeltaTime);

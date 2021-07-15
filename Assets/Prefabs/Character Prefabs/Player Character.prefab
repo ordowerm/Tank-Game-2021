@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1972981287119497776}
   - component: {fileID: 3272240172535450917}
-  - component: {fileID: 2291414757554718199}
   m_Layer: 0
   m_Name: shape_reticle_outline
   m_TagString: Untagged
@@ -73,7 +72,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 8
   m_Sprite: {fileID: 278320761139008250, guid: 6f0d867de5638aa43b59f5568f120c89, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.36078432}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -83,23 +82,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2291414757554718199
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6386468600763120570}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e34de938b9fcdc47b36cf97dc9219af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  c0: {r: 0.6784314, g: 0.31764707, b: 0.31764707, a: 1}
-  c1: {r: 1, g: 1, b: 1, a: 1}
-  period: 0.2
-  sprite: {fileID: 3272240172535450917}
-  active: 0
 --- !u!1 &6968204646824137307
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,14 +469,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6968204647749359857}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: -0.9396926, w: 0.34202018}
   m_LocalPosition: {x: -0.45, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6968204648732486200}
   m_Father: {fileID: 6968204648234941270}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -140}
 --- !u!212 &6968204647749359871
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -720,7 +702,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6968204647963789535}
   - component: {fileID: 6968204647963789532}
-  - component: {fileID: 6968204647963789533}
   m_Layer: 0
   m_Name: shape_reticles_0
   m_TagString: Untagged
@@ -795,23 +776,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6968204647963789533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6968204647963789534}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e34de938b9fcdc47b36cf97dc9219af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  c0: {r: 0.6784314, g: 0.31764707, b: 0.31764707, a: 1}
-  c1: {r: 1, g: 1, b: 1, a: 1}
-  period: 0.2
-  sprite: {fileID: 6968204647963789532}
-  active: 0
 --- !u!1 &6968204648154715381
 GameObject:
   m_ObjectHideFlags: 0
@@ -1289,7 +1253,7 @@ SpriteRenderer:
   m_SortingOrder: 7
   m_Sprite: {fileID: -6743803926389035461, guid: fb3e0cc9e4648754a971a791a4d9f189,
     type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3be93e74495f3df4eb945110a12b05fd, type: 3}
+  m_Name: Xbox Map
+  m_EditorClassIdentifier: 
+  inputPairs:
+  - inputName: Left Analog X
+    controllerType: 0
+    keycode: 0
+    axisName: haxis
+    spriteAsset: {fileID: 11400000, guid: 1aa1ce979ca875943911cc1e37608f85, type: 2}
+    frameDelay: 0.01
+  - inputName: Left Analog Y
+    controllerType: 0
+    keycode: 0
+    axisName: vaxis
+    spriteAsset: {fileID: 11400000, guid: 1aa1ce979ca875943911cc1e37608f85, type: 2}
+    frameDelay: 0.01
+  - inputName: A Button
+    controllerType: 0
+    keycode: 330
+    axisName: 
+    spriteAsset: {fileID: 11400000, guid: c9dbf9a2bb50f4b4fa80bf387f633541, type: 2}
+    frameDelay: 0.2
+  - inputName: B Button
+    controllerType: 0
+    keycode: 331
+    axisName: 
+    spriteAsset: {fileID: 11400000, guid: 18e17d7e76b4bae48a823c980761b2d3, type: 2}
+    frameDelay: 0.2
+  - inputName: X Button
+    controllerType: 0
+    keycode: 332
+    axisName: 
+    spriteAsset: {fileID: 11400000, guid: 5d271519868fede4393c3e2188f7f15a, type: 2}
+    frameDelay: 0.2
+  - inputName: Y Button
+    controllerType: 0
+    keycode: 333
+    axisName: 
+    spriteAsset: {fileID: 11400000, guid: f7fe9a594900de048a4e8f58311f27c7, type: 2}
+    frameDelay: 0.2
+  - inputName: Start Button
+    controllerType: 0
+    keycode: 337
+    axisName: 
+    spriteAsset: {fileID: 11400000, guid: 2783e8dfb8e67cd438c4f81414d56eda, type: 2}
+    frameDelay: 0.2
+  - inputName: Home Button
+    controllerType: 0
+    keycode: 336
+    axisName: 
+    spriteAsset: {fileID: 11400000, guid: 1d52a628c2bac3a48bf8bcaa7fc60d58, type: 2}
+    frameDelay: 0.2
+  - inputName: Right Analog X
+    controllerType: 0
+    keycode: 0
+    axisName: aimhoriz
+    spriteAsset: {fileID: 11400000, guid: 66d797b2af31f7a46ae32993aadf0465, type: 2}
+    frameDelay: 0.01
+  - inputName: Right Analog Y
+    controllerType: 0
+    keycode: 0
+    axisName: aimvert
+    spriteAsset: {fileID: 11400000, guid: 66d797b2af31f7a46ae32993aadf0465, type: 2}
+    frameDelay: 0.01

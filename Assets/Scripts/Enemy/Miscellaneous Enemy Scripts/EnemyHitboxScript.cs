@@ -12,7 +12,7 @@ public class EnemyHitboxScript : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("PlayerBullet"))
         {
-            Debug.Log("I got hitted");
+            //Debug.Log("I got hitted");
             BulletSM bsm = collision.gameObject.GetComponent<BulletSM>();
             if (bsm)
             {
@@ -28,7 +28,7 @@ public class EnemyHitboxScript : MonoBehaviour
                     sm.NotifyResist();
                     //Vector2 reverse = -bsm.rb.velocity;
                     //Vector2 tangent = collision.GetContact(0).normal; //gets the normal of the collider
-                    Debug.Log("In hitbox script. Initial direction = " + bsm.GetInitialDirection());
+                    //Debug.Log("In hitbox script. Initial direction = " + bsm.GetInitialDirection());
                     Vector2 dir = -bsm.GetInitialDirection();// Vector3.Cross(bsm.GetInitialDirection(), new Vector3(0,0,-1));
                     float reflectionAngle = Random.Range(-Mathf.PI/2.0f,Mathf.PI/2.0f);
                     Vector2 dotForX = new Vector2(Mathf.Cos(reflectionAngle), -Mathf.Sin(reflectionAngle));

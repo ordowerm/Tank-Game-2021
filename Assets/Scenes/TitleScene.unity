@@ -1978,6 +1978,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a9e6f410c590ac4e85fe42dc56de80f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  optionScripts: []
+  settings:
+    playerVars: []
+    accessibleMode: 0
+    sfxVolume: 0
+    musicVolume: 0
+    enableParticleEffects: 0
+    deterministicAI: 0
+    useLighting: 0
+    useTimeLimits: 0
+    oneHitKO: 0
   palette: []
 --- !u!1 &772614806
 GameObject:

@@ -7,11 +7,13 @@ using UnityEngine;
  */
 public class LevelMGMTRunState : LevelMgmtState
 {
-    float timer;
+    float gameTimer;
+    const float spawnDelay = 2; //after the "Enemies Approaching" message is displayed, wait a few seconds before spawning the new enemies.
+    const float messageDelay = 1; //after last enemy of the wave is destroyed, wait a few seconds before sending the spawn message
 
     public LevelMGMTRunState(GameObject t, GameStateMachine s) : base(t, s)
     {
-        timer = ((LevelManager)(sm)).timeLimit;
+        gameTimer = ((LevelManager)(sm)).timeLimit;
     }
 
     public override void NotifyEnemyWaveCleared()
@@ -19,41 +21,72 @@ public class LevelMGMTRunState : LevelMgmtState
         base.NotifyEnemyWaveCleared();
 
         //Start a new wave 
-        if (timer>3)
+        if (gameTimer> spawnDelay + messageDelay)
         {
-            SendEnemyWaveMessage();
+            lm().StartCoroutine(this.WaveMessageDelayCoroutine());
         }
+    }
+
+    public override void NotifyMessageFinished()
+    {
+        base.NotifyMessageFinished();
+        Debug.Log("Notified in run state");
+
     }
 
     public override void OnEnter()
     {
         base.OnEnter();
+        lm().StartCoroutine(this.EnemySpawnDelayCoroutine());
+
     }
 
+
+
+    //Displays a message notifying the player of a new wave of approaching enemies
     void SendEnemyWaveMessage()
     {
         
             ((LevelManager)sm).SendUIMessages(new SceneOverlayMessage[]{
-            new SceneOverlayMessage("Enemies Approaching!",TextDisplayer.TextSpeed.SKIP,0.7f),
-            new SceneOverlayMessage("Wave "+lm().GetWaveNumber(),TextDisplayer.TextSpeed.SKIP,0.7f)
+            new SceneOverlayMessage("Enemies Approaching!",TextDisplayer.TextSpeed.FAST,0.7f),
+            new SceneOverlayMessage("Wave #"+lm().GetWaveNumber(),TextDisplayer.TextSpeed.FAST,0.7f)
 
 
             });
         
         
     }
+    //Coroutine that delays spawning new enemies until the enemy wave message disappears
+    IEnumerator EnemySpawnDelayCoroutine()
+    {
+        //Debug.Log("Starting enemy spawning delay coroutine");
+        yield return new WaitForSeconds(spawnDelay);
+        lm().SpawnEnemyWave();
+    }
+    IEnumerator WaveMessageDelayCoroutine()
+    {
+        Debug.Log("Wave message delay coroutine");
+        yield return new WaitForSeconds(messageDelay);
+        SendEnemyWaveMessage();
+        lm().StartCoroutine(this.EnemySpawnDelayCoroutine());
+    }
+
+
+
+
+
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (timer > 0)
+        if (gameTimer > 0)
         {
-            timer -= Time.deltaTime;
-            ((LevelManager)(sm)).levelUI.SetTimerText(timer);
+            gameTimer -= Time.deltaTime;
+            ((LevelManager)(sm)).levelUI.SetTimerText(gameTimer);
         }
         else
         {
-            timer = 0;
+            gameTimer = 0;
             ((LevelManager)(sm)).levelUI.SetTimerText("Time\'s Up!");
         }
     }

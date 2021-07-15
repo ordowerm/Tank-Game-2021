@@ -10,8 +10,11 @@ using UnityEngine;
  */
 public class MenuOptionsManager : MonoBehaviour
 {
+    public MenuOptionScript[] optionScripts;
     List<MenuOptionScript> options;
+    public GameSettings settings;
     int selectedIndex = -1;
+    IControllerInput cont;
 
     //Color palette to use for the different UI states
     public ColorList[] palette;
@@ -51,15 +54,7 @@ public class MenuOptionsManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+  
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

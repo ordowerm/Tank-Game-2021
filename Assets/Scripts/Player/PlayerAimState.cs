@@ -103,10 +103,18 @@ public class PlayerAimState : PlayerState
            if (lockId > -1 && enemyList.Count > 0)
                 {
                     //Debug.Log("Lock id = " + lockId + " Count = " + enemyList.Count);
+                    if (enemyList[lockId])
+                {
                     arm.transform.rotation = Quaternion.Euler(0, 0, GetEnemyAngle(enemyList[lockId]));
-                    aimdir = new Vector2(enemyList[lockId].transform.position.x - target.transform.position.x,target.transform.position.y-enemyList[lockId].transform.position.y).normalized; //update stored aim direction so that cannon remains facing the enemy once lockon ends
+                    aimdir = new Vector2(enemyList[lockId].transform.position.x - target.transform.position.x, target.transform.position.y - enemyList[lockId].transform.position.y).normalized; //update stored aim direction so that cannon remains facing the enemy once lockon ends
 
                 }
+                    else
+                {
+                    lockedOn = false;
+                    gun.GetComponent<WeaponScript>().ResetReticle();
+                }
+            }
             
         }
 

@@ -19,7 +19,7 @@ public class BulletBounceState : BulletState
         rb.velocity = ((BulletSM)sm).GetInitialDirection();
         rb.velocity *= ((BulletSM)sm).bdata.speed;
 
-        Debug.Log("In BulletBounce OnEnter: " + rb.velocity);
+        //Debug.Log("In BulletBounce OnEnter: " + rb.velocity);
         //((BulletSM)sm).trail.enabled = false;
     }
 

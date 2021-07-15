@@ -25,6 +25,7 @@ public class EnemySpawnData
 [Serializable]
 public class StageRegion
 {
+    public bool loop; //set to true if the enemy waves should loop
     public Rect reg; //define x, y location, and size, where region is located
     public EnemyWave[] waves;
     public Vector2[] playerSpawnLocations;

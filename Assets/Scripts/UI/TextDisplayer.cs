@@ -151,14 +151,24 @@ public class TextDisplayer : MonoBehaviour
         //Debug.Log("Running TextDisplayCoroutine");
         while (textBuffer.Length < fullMessage.Length )
         {
+
             coroutineRunning = true;
             AppendCharactersToBuffer();
-            text.text = textBuffer;
+
+            //Fill up white space to maintain constant number of characters in textbox (note: the alignment might still change when using non-monospace fonts):
+            string whiteSpaces = "";
+            for (int i = textBuffer.Length; i<fullMessage.Length; i++)
+            {
+                whiteSpaces += "  ";
+            }
+            Debug.Log("Whitespaces: " + whiteSpaces + ".");
+            text.text = textBuffer + whiteSpaces;
+
 
             //Check if buffer is filled with the entire message. If it is, notify listeners and mark the rendering as complete
             if (fullMessage.Length == textBuffer.Length) //I considered checking for an exact match between strings but didn't want the extra overhead
             {
-                //Debug.Log("TextDisplay buffer filled");
+                //Debug.Log("TextDisplay buffer filled:" + textBuffer);
                 foreach (GameObject l in listeners)
                 {
                     l.GetComponent<ITextDisplayListener>().NotifyTextRenderComplete(this);
@@ -166,8 +176,10 @@ public class TextDisplayer : MonoBehaviour
                 coroutineRunning = false; //I think this should only call when the coroutine finishes, but I could be wrong.
                 yield return null;
             }
-
-            yield return new WaitForSeconds(delay);
+            else
+            {
+                yield return new WaitForSeconds(delay);
+            }
         }
     }
 

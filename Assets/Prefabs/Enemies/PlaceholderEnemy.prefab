@@ -633,7 +633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1964032b77b369743a3c17f9db611142, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 1
+  debug: 0
   levelManager: {fileID: 0}
   hitboxes:
   - {fileID: 942351467540233009}
@@ -645,6 +645,8 @@ MonoBehaviour:
   - {fileID: 942351468048503355}
   - {fileID: 942351467033636002}
   - {fileID: 942351466893008455}
+  explosionPrefab: {fileID: 6536117651240650776, guid: f330e27eb63fb9945a6fd875b0e9ce09,
+    type: 3}
 --- !u!114 &942351468495706630
 MonoBehaviour:
   m_ObjectHideFlags: 0

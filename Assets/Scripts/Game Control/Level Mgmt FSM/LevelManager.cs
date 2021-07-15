@@ -136,6 +136,7 @@ public class LevelManager : GameStateMachine
         //If enemy count is down to 0, notify the current state that the enemy wave has ended
         if (enemyCount < 1)
         {
+            Debug.Log("Level manager: No enemies left");
             enemyWaveNumber++;
             ((LevelMgmtState)currentState).NotifyEnemyWaveCleared();
         }
@@ -153,14 +154,50 @@ public class LevelManager : GameStateMachine
 
     //Call when spawning a new enemy wave to display the number (+1, because humans usually count from 1)
     public int GetWaveNumber() { return enemyWaveNumber+1; }
+    
+    //Spawns an individual enemy and registers it to the list of active enemies
+    public void SpawnEnemy(EnemySpawnData en)
+    {
+        
+           GameObject newEnemy = Instantiate(en.enemy);
+           newEnemy.transform.position = en.spawnLocation;
+           int idNo;    
+           
+           //If there are returned enemy id numbers (from an enemy getting destroyed, for example), use one of the returned IDs; otherwise our Dictionary will keep getting bigger.
+           if (returnedEnemyIds.Count > 0)
+           {
+               idNo = returnedEnemyIds.Dequeue();
+           }
+           else
+           {
+               idNo = enemyCount; 
+           }
+        EnemyStateMachine nsm = newEnemy.GetComponent<EnemyStateMachine>();
+        nsm.SetOrientation(en.orientation);
+        nsm.SetIDNumber(idNo);
+        nsm.levelManager = this;
+        nsm.data = en.edata;
+        enemyCount++;
+        enemyList.Add(idNo, newEnemy);
+    }
+
+    
     //Spawns a wave of enemies
-    public void SpawnEnemyWave() { 
-    
-    
-    
-    
-    
-    
+    public void SpawnEnemyWave() {
+       
+        try
+        {
+            foreach (EnemySpawnData en in stageData.regions[stageRegionNumber].waves[enemyWaveNumber%stageData.regions[stageRegionNumber].waves.Length].enemies)
+            {
+                SpawnEnemy(en);
+
+            }
+        }
+        catch (System.IndexOutOfRangeException)
+        {
+            Debug.LogError("Region number: " + stageRegionNumber);
+            Debug.LogError("Enemy Wave Number: " + enemyWaveNumber);
+        }
     }
     
     //Gets the enemy list
@@ -209,7 +246,9 @@ public class LevelManager : GameStateMachine
     //Call when scene overlay message is finished displaying
     public void NotifySceneMessageFinishedRendering()
     {
+        //Debug.Log("In level Manger: scene message done rendering. Notifying the state: "+currentState.ToString());
         ((LevelMgmtState)currentState).NotifyMessageFinished();
+        
     }
 
 

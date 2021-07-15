@@ -45,20 +45,36 @@ public class WeaponScript : MonoBehaviour
     //Call in UpdateWeapon
     protected void UpdateWeaponAndReticleSprites()
     {
+        /*
+        Debug.Log("Weapon number before: "+weaponId);
+        Debug.Log("Primary color before: " + wdata[weaponId].bullettype.element.primary);
+        Debug.Log("Outline color before: " + wdata[weaponId].bullettype.element.outlineColor);
+        */
+
+        //Update weapon sprite
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
         sprite.sprite = wdata[weaponId].weaponsprite;
         sprite.color = wdata[weaponId].bullettype.element.primary;
+
+        //Update outline sprite
+        SpriteRenderer outlineSprite = reticleOutline.GetComponent<SpriteRenderer>();
+        outlineSprite.sprite = wdata[weaponId].bullettype.element.reticleOutlineSprite; //update sprite for outline, too.
+        outlineSprite.color = wdata[weaponId].bullettype.element.outlineColor; //update sprite for outline, too.
+
+        //Update reticle sprite
         SpriteRenderer retSprite = reticle.GetComponent<SpriteRenderer>();
         retSprite.sprite = wdata[weaponId].bullettype.element.reticleSprite;
-        reticleOutline.GetComponent<SpriteRenderer>().sprite = wdata[weaponId].bullettype.element.reticleOutlineSprite; //update sprite for outline, too.
-        reticleOutline.GetComponent<SpriteRenderer>().color = wdata[weaponId].bullettype.element.outlineColor; //update sprite for outline, too.
-
         retSprite.color = wdata[weaponId].bullettype.element.primary;
 
+        /*
+        Debug.Log("Weapon number after: " + weaponId);
+        Debug.Log("Reticle color after: " + sprite.color);
+        Debug.Log("Outline color after: " + outlineSprite.color);
+        */
     }
     //Unused (as of 7/4) function that modifies shader parameters for the reticle, as opposed to modifying its sprite renderer directly.
     //Since I stopped using the OutlineShader material (it was giving unexpected behavior), this isn't currently used.
-   protected void UpdateReticleShaders()
+    protected void UpdateReticleShaders()
     {
         SpriteRenderer retSprite = reticle.GetComponent<SpriteRenderer>();
         Material retMat = retSprite.material;
@@ -118,7 +134,6 @@ public class WeaponScript : MonoBehaviour
         pressed = false;
     }
 
-
     //spawn bullet and reset timers
     public void Fire()
     {
@@ -165,7 +180,7 @@ public class WeaponScript : MonoBehaviour
         if (t == null)
         {
             Debug.Log("Setting null target");
-
+            ResetReticle();
             return;
         }
 
@@ -184,7 +199,7 @@ public class WeaponScript : MonoBehaviour
         t.GetComponent<EnemyStateMachine>().RegisterReticle(reticle);
         reticle.transform.SetParent(t.transform);
         reticle.transform.localPosition = new Vector2(0,0);
-        reticle.transform.localScale = new Vector3(reticleMaxScale, Mathf.Sign(transform.localScale.y)*reticleMaxScale, 1);
+        reticle.transform.localScale = new Vector3(reticleMaxScale/t.transform.localScale.x, Mathf.Sign(transform.localScale.y)*reticleMaxScale/t.transform.localScale.y, 1);
         
         //Attempt to turn on glow animation on reticle
         GlowAnimation g = reticle.GetComponent<GlowAnimation>();
@@ -193,21 +208,21 @@ public class WeaponScript : MonoBehaviour
             g.SetActive(true);
         }
     }
+    //When canceling lockon, or when the enemy currently targeted gets destroyed, reset reticle to non-locked-on state
     public void ResetReticle()
     {
-        if (reticle.transform.parent == gameObject.transform) { return; }
-        reticle.transform.position = this.transform.position;
-        reticle.transform.SetParent(this.transform);
-        reticle.transform.localPosition = new Vector2(defaultReticleDistance,0);
-        reticle.transform.localScale = new Vector3(reticleMinScale, reticleMinScale, 1);
-
-        //Attempt to turn off glow animation on reticle
-        GlowAnimation g = reticle.GetComponent<GlowAnimation>();
-        if (g)
+        if (reticle.transform.parent == null ||
+            reticle.transform.parent != gameObject.transform
+            )
         {
-            g.SetActive(false);
-        }
+            reticle.transform.position = this.transform.position;
+            reticle.transform.SetParent(this.transform);
+            reticle.transform.localPosition = new Vector2(defaultReticleDistance, 0);
+            reticle.transform.localScale = new Vector3(reticleMinScale, reticleMinScale, 1);
+        }       
+       
     }
+
 
     protected void Update()
     {

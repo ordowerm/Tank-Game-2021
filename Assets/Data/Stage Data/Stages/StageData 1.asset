@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: StageData 1
   m_EditorClassIdentifier: 
   regions:
-  - reg:
+  - loop: 1
+    reg:
       serializedVersion: 2
       x: 0
       y: 0
@@ -21,6 +22,7 @@ MonoBehaviour:
       height: 5
     waves:
     - {fileID: 11400000, guid: 0e9c83e3a4f80d446a81fc692fd3d374, type: 2}
+    - {fileID: 11400000, guid: d2a71717656b48f48be5a543a04d1c20, type: 2}
     playerSpawnLocations:
     - {x: 0, y: 0}
     - {x: 0, y: 0}
