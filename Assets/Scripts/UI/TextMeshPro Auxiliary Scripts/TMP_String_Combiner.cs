@@ -14,7 +14,13 @@ public class TMP_String_Combiner : MonoBehaviour
     [System.Serializable]
     public struct TMP_String_Mixed
     {
-        public int paramId; //set to -1 to denote a regular string. Otherwise, this denotes the TMP_Animate_Sprite to use for drawing.
+        /*
+         Notes on the field int paramId:
+         This field denotes the index in the sprite array TMP_Animate_Sprite[] corresponding to the sprite that should be rendered inline.
+         If paramId equals -1, let that denote "don't display a sprite; display m_string instead.
+         If paramId equals -2, let that denote '\n', since you can't include escape characters in the UnityEditor Inspector.
+         */
+        public int paramId; 
         public string m_string;
 
     }
@@ -35,10 +41,20 @@ public class TMP_String_Combiner : MonoBehaviour
             {
                 result += sprites[s.paramId].GetSpriteAssetTag();
             }
-            else
+            
+            //-1 denotes regular text
+            else if (s.paramId ==-1)
             {
                 result += s.m_string;
             }
+
+            //-2 denotes line break
+            else if (s.paramId ==-2)
+            {
+                result += "\n";
+            }
+
+            //notice: if an invalid paramId is used, nothing gets appended to the result string.
         }
 
 
@@ -59,10 +75,7 @@ public class TMP_String_Combiner : MonoBehaviour
                 {
                     delay = s.key.frameDelay; //minimizes delay time
                 }
-                //GameObject newGameObject = new GameObject();
-                //newGameObject.transform.SetParent(this.transform);
-                //TMP_SubMesh submesh = newGameObject.AddComponent<TMP_SubMesh>();
-                //submesh.spriteAsset.
+               
             }
 
 
@@ -84,6 +97,7 @@ public class TMP_String_Combiner : MonoBehaviour
         for(; ; )
         {
             text.text = GetConcatenatedString();
+            Canvas.ForceUpdateCanvases();
             yield return new WaitForSeconds(delay);
         }
     }

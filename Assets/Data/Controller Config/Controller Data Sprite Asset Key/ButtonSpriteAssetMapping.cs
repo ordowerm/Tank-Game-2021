@@ -12,4 +12,5 @@ public class ButtonSpriteAssetMapping : ScriptableObject
     public TMP_SpriteAsset spriteAsset;
     public float frameDelay; //delay between advancing the textmesh
     public bool playReverseAnimation; //when looping animation, play in reverse after playing forward
+    public int framesInAnimation; //number of frames in the animation
 }

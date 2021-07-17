@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!21 &-9122441384327117027
+--- !u!21 &-974155140866719691
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 1
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: l_bumper_sprite
   m_EditorClassIdentifier: 
   hashCode: 1351080600
-  material: {fileID: -9122441384327117027}
+  material: {fileID: -974155140866719691}
   materialHashCode: 0
   m_Version: 1.1.0
   m_FaceInfo:
@@ -110,15 +110,15 @@ MonoBehaviour:
     m_Metrics:
       m_Width: 32
       m_Height: 32
-      m_HorizontalBearingX: -16
-      m_HorizontalBearingY: 16
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 20
       m_HorizontalAdvance: 32
     m_GlyphRect:
       m_X: 0
       m_Y: 64
       m_Width: 32
       m_Height: 32
-    m_Scale: 1
+    m_Scale: 2
     m_AtlasIndex: 0
     sprite: {fileID: -9002851306845469250, guid: 096c606c55119e441baaa3950b692210,
       type: 3}
@@ -126,30 +126,30 @@ MonoBehaviour:
     m_Metrics:
       m_Width: 32
       m_Height: 32
-      m_HorizontalBearingX: -16
-      m_HorizontalBearingY: 16
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 20
       m_HorizontalAdvance: 32
     m_GlyphRect:
       m_X: 32
       m_Y: 64
       m_Width: 32
       m_Height: 32
-    m_Scale: 1
+    m_Scale: 2
     m_AtlasIndex: 0
     sprite: {fileID: 792108129940584430, guid: 096c606c55119e441baaa3950b692210, type: 3}
   - m_Index: 2
     m_Metrics:
       m_Width: 32
       m_Height: 32
-      m_HorizontalBearingX: -16
-      m_HorizontalBearingY: 16
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 20
       m_HorizontalAdvance: 32
     m_GlyphRect:
       m_X: 0
       m_Y: 32
       m_Width: 32
       m_Height: 32
-    m_Scale: 1
+    m_Scale: 2
     m_AtlasIndex: 0
     sprite: {fileID: -6198821683713540114, guid: 096c606c55119e441baaa3950b692210,
       type: 3}
@@ -157,30 +157,30 @@ MonoBehaviour:
     m_Metrics:
       m_Width: 32
       m_Height: 32
-      m_HorizontalBearingX: -16
-      m_HorizontalBearingY: 16
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 20
       m_HorizontalAdvance: 32
     m_GlyphRect:
       m_X: 32
       m_Y: 32
       m_Width: 32
       m_Height: 32
-    m_Scale: 1
+    m_Scale: 2
     m_AtlasIndex: 0
     sprite: {fileID: 445592452251201426, guid: 096c606c55119e441baaa3950b692210, type: 3}
   - m_Index: 4
     m_Metrics:
       m_Width: 32
       m_Height: 32
-      m_HorizontalBearingX: -16
-      m_HorizontalBearingY: 16
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 20
       m_HorizontalAdvance: 32
     m_GlyphRect:
       m_X: 0
       m_Y: 0
       m_Width: 32
       m_Height: 32
-    m_Scale: 1
+    m_Scale: 2
     m_AtlasIndex: 0
     sprite: {fileID: 2775498276157792515, guid: 096c606c55119e441baaa3950b692210,
       type: 3}

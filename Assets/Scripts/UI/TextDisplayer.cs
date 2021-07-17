@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /*
  * Renders text gradually into the textbox specified in the public field.
@@ -19,16 +20,14 @@ public class TextDisplayer : MonoBehaviour
     public TextSpeed speed;
 
     //References to UI objects
-    public Text text;
+    public TMPro.TextMeshProUGUI text;
 
     //Runtime variables that get modified
     public GameObject[] listeners;
-    float timer = 0; //timer controlling the delay
     float delay; //current delay between calls to AppendCharactersToBuffer
-    string fullMessage = ""; //entire string to eventually render
-    string textBuffer = ""; //part of string to render on a given frame
     bool coroutineRunning = false; //flag denoting that the text displayer should stop trying to add new characters
     bool initialized = false;
+    int maxChars = 0; //max characters displayed in TextMeshProUGUI
 
     //Enumeration allowing for different presets of text speed
     public enum TextSpeed
@@ -64,10 +63,9 @@ public class TextDisplayer : MonoBehaviour
             Debug.Log("Coroutine stopped");
             StopCoroutine(TextDisplayCoroutine()); //halt race conditions
         }
-        fullMessage = s;
-        ClearBuffer(); //Clears buffer before repopulating it
-        //timer = 0; //resets timer
-        //awaitingConfirmation = false;
+        maxChars = 0;
+        text.maxVisibleCharacters = maxChars;
+        text.text = s;
         StartCoroutine(TextDisplayCoroutine());
     }
     public void SetMessage(SceneOverlayMessage s){
@@ -82,91 +80,30 @@ public class TextDisplayer : MonoBehaviour
     {
         if (speed == TextSpeed.SKIP)
         {
-            textBuffer = fullMessage;
+            maxChars = text.text.Length;
             return;
         }
-        
         //set number of characters to append
         int lettersRenderedPerCycle = charactersPerDisplayStep_slow;
         if (speed == TextSpeed.FAST)
         {
             lettersRenderedPerCycle = charactersPerDisplayStep_fast;
         }
-
-        //append individual characters to the message
-        for (int i = 0; i<lettersRenderedPerCycle;i++)
-        {
-            if (textBuffer.Length < fullMessage.Length)
-            {
-                textBuffer += fullMessage[textBuffer.Length]; //Appends the next character of the message to the text buffer
-            }
-          
-        }
-        
+       
+        maxChars = Mathf.Min(maxChars + lettersRenderedPerCycle, text.text.Length); //increase number of visible chars
+       
     }
     
-    //Clears buffer
-    public void ClearBuffer()
+     IEnumerator TextDisplayCoroutine()
     {
-        textBuffer = "";
-    }
-
-
-    //NOTE: replaced this with a coroutine
-    //advances timer and renders if appropriate
-    //Eventually I might want to move this to a coroutine to improve performance
-    void AdvanceTimer()
-    {
-       
-        if (!coroutineRunning)
+        while (maxChars < text.text.Length)
         {
-            //Append characters to string and update Text component's text field
-            timer = Mathf.Min(timer + Time.deltaTime, delay);
-            if (timer >= delay)
-            {
-                AppendCharactersToBuffer();
-                timer = 0;
-                text.text = textBuffer;
-
-            }
-
-            //Check if buffer is filled with the entire message. If it is, notify listeners and mark the rendering as complete
-            if (fullMessage.Length == textBuffer.Length) //I considered checking for an exact match between strings but didn't want the extra overhead
-            {
-                coroutineRunning = true;
-                foreach (GameObject l in listeners)
-                {
-                    l.GetComponent<ITextDisplayListener>().NotifyTextRenderComplete(this);
-                }
-            }
-        }
-
-        
-    }
-
-
-    //There currently aren't any protections against race conditions 
-    IEnumerator TextDisplayCoroutine()
-    {
-        //Debug.Log("Running TextDisplayCoroutine");
-        while (textBuffer.Length < fullMessage.Length )
-        {
-
             coroutineRunning = true;
             AppendCharactersToBuffer();
-
-            //Fill up white space to maintain constant number of characters in textbox (note: the alignment might still change when using non-monospace fonts):
-            string whiteSpaces = "";
-            for (int i = textBuffer.Length; i<fullMessage.Length; i++)
-            {
-                whiteSpaces += "  ";
-            }
-            Debug.Log("Whitespaces: " + whiteSpaces + ".");
-            text.text = textBuffer + whiteSpaces;
-
-
+            text.maxVisibleCharacters = maxChars;
+            
             //Check if buffer is filled with the entire message. If it is, notify listeners and mark the rendering as complete
-            if (fullMessage.Length == textBuffer.Length) //I considered checking for an exact match between strings but didn't want the extra overhead
+            if (text.text.Length == maxChars) //I considered checking for an exact match between strings but didn't want the extra overhead
             {
                 //Debug.Log("TextDisplay buffer filled:" + textBuffer);
                 foreach (GameObject l in listeners)
@@ -183,23 +120,4 @@ public class TextDisplayer : MonoBehaviour
         }
     }
 
-
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        //Test messaging:
-        
-        /*(Input.GetKeyDown(KeyCode.L))
-        {
-            SetMessage("This is a message to you, Rudy.");
-        }
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            SetMessage("Better think of your future.");
-        }*/
-
-        //AdvanceTimer();
-    }
 }

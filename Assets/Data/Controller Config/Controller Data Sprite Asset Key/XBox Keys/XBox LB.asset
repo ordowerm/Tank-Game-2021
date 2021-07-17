@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d24cd5d8aac88e84eb6781e1dfc2d147, type: 3}
-  m_Name: XBox A Button Mapping
+  m_Name: XBox LB
   m_EditorClassIdentifier: 
-  inputName: A Button
+  inputName: Left Bumper
   controllerType: 0
-  keycode: 330
+  keycode: 334
   axisName: 
-  spriteAssetPrefix: a_button_sprite
-  spriteAsset: {fileID: 11400000, guid: 64cfde7c88792804e802f0ba89552010, type: 2}
-  frameDelay: 0.13333334
+  spriteAssetPrefix: l_bumper_sprite
+  spriteAsset: {fileID: 11400000, guid: 64152b114843bd5428d17cd05bb4cd30, type: 2}
+  frameDelay: 0.1333333
   playReverseAnimation: 1
-  framesInAnimation: 4
+  framesInAnimation: 5

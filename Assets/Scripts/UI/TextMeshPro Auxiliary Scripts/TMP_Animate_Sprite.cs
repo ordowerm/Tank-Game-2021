@@ -17,7 +17,7 @@ public class TMP_Animate_Sprite : MonoBehaviour
     {
         spriteFrameId = 0;
        // GetComponent<TMP_SubMesh>().spriteAsset = key.spriteAsset;
-        StartCoroutine(UpdateSpriteIndex());
+        StartCoroutine(this.UpdateSpriteIndex());
         /*foreach (ButtonSpriteAssetMapping b in keys)
         {
             Debug.Log("In animate sprite"+b.spriteAsset.spriteGlyphTable.Count);
@@ -29,11 +29,11 @@ public class TMP_Animate_Sprite : MonoBehaviour
     public string GetSpriteAssetTag()
     {
         string result = "";
-        result += "<sprite name=\""
+        result += " <sprite=\""
                    + key.spriteAssetPrefix
                    + "\" index="
                    + spriteFrameId
-                   + ">";
+                   + "> ";
         
 
         return result;
@@ -53,11 +53,11 @@ public class TMP_Animate_Sprite : MonoBehaviour
                 framenumber++;
                 if (!key.playReverseAnimation)
                 {
-                    framenumber %= key.spriteAsset.spriteGlyphTable.Count;
+                    framenumber %= key.framesInAnimation;
                 }
                 else
                 {
-                    if (framenumber >= key.spriteAsset.spriteGlyphTable.Count-1)
+                    if (framenumber >= key.framesInAnimation-1)
                     {
                         forward = false;
                     }
