@@ -37,11 +37,13 @@ MonoBehaviour:
   unlockTrigger: 
   triggerDeadzone: 0.75
   deadzoneMove: 0.3
-  deadzoneAim: 0.2
-  deadzoneSwitchTarget: 0.1
-  lockType: 1
+  deadzoneAim: 0.3
+  deadzoneSwitchTarget: 0.2
+  lockType: 0
   switchTargetAxis: aimhoriz
   weapon0: 331
   weapon1: 333
   weapon2: 330
   weapon3: 0
+  menuConfirmButton: 330
+  menuCancelButton: 331

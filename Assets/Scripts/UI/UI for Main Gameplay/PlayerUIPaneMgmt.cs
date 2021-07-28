@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using TMPro;
 
 /*
  This class controls an individual player's "section" of the HUD at the top of the screen, during the main gameplay.
@@ -24,8 +24,8 @@ public class PlayerUIPaneMgmt : MonoBehaviour
     //References to UI Objects
     public Canvas canvas; //reference to the parent canvas on which the player pane is displayed
     public GameObject[] UIRows; //UI rows to deactivate, as necessary, to hide certain parts of the UI
-    public Text PlayerNameText;
-    public Text PlayerScoreText;
+    public TextMeshProUGUI PlayerNameText;
+    public TextMeshProUGUI PlayerScoreText;
     public Image PortraitFace; //reference to the player portrait. Update skin color as needed.
     public Image PortraitHair; //reference to the player potrait's hair. Update style and color as needed.
     public Image WeaponIcon; //reference to the picture of the bullet type.

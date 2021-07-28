@@ -147,6 +147,7 @@ public class PlayerSM : InputStateMachine
     public void SetWeapon(WeaponScript.WeaponName wn) {
         WeaponScript wscript = gun.GetComponent<WeaponScript>();
         wscript.UpdateWeapon(wn);
+        levelManager.playerVars[playerId].weapondata = wscript.wdata[(int)wn];
         levelManager.levelUI.UpdateUIPaneWeaponDisplay(playerId, wscript.GetBulletData());
     }
 }

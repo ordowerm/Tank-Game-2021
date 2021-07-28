@@ -8,6 +8,8 @@ public class EnemyHitboxScript : MonoBehaviour
     public Collider2D col;
     public Element element;
 
+
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("PlayerBullet"))
@@ -16,20 +18,18 @@ public class EnemyHitboxScript : MonoBehaviour
             BulletSM bsm = collision.gameObject.GetComponent<BulletSM>();
             if (bsm)
             {
-                Element bulletElement = bsm.bdata.element.element;
+                bsm.SetHitboxActive(false); //remove bullet hitbox
+                Element bulletElement = bsm.bdata.element.element; //get the bullet's element
 
                 if (bulletElement == element)
                 {
-                    sm.NotifyHit(bsm.bdata.power);
+                    sm.NotifyHit(bsm);
                     bsm.ChangeState(bsm.hitState);
                 }
                 else
                 {
                     sm.NotifyResist();
-                    //Vector2 reverse = -bsm.rb.velocity;
-                    //Vector2 tangent = collision.GetContact(0).normal; //gets the normal of the collider
-                    //Debug.Log("In hitbox script. Initial direction = " + bsm.GetInitialDirection());
-                    Vector2 dir = -bsm.GetInitialDirection();// Vector3.Cross(bsm.GetInitialDirection(), new Vector3(0,0,-1));
+                    Vector2 dir = -bsm.GetInitialDirection();
                     float reflectionAngle = Random.Range(-Mathf.PI/2.0f,Mathf.PI/2.0f);
                     Vector2 dotForX = new Vector2(Mathf.Cos(reflectionAngle), -Mathf.Sin(reflectionAngle));
                     Vector2 dotForY = new Vector2(Mathf.Sin(reflectionAngle), Mathf.Cos(reflectionAngle));
@@ -57,7 +57,6 @@ public class EnemyHitboxScript : MonoBehaviour
     protected void NotifyScoreUpdate(int playerId, int score)
     {
         sm.levelManager.IncrementPlayerScore(playerId, score);
-        //sm.levelManager.playerVars[playerId].
     }
 
 }

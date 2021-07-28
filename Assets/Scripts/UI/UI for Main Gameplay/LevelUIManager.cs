@@ -48,7 +48,7 @@ public class LevelUIManager : MonoBehaviour
     float animTimer = 0; //time elapsed during animation
 
     //MGMT of Timer UI Pane:
-    public Text timerText; //Reference to the Text UI Element containing the "Seconds Remaining" stuff.   
+    public TMPro.TextMeshProUGUI timerText; //Reference to the Text UI Element containing the "Seconds Remaining" stuff.   
     //Sets the timer to display in the correct format and updates the text
     public void SetTimerText(float f)
     {
@@ -157,7 +157,7 @@ public class LevelUIManager : MonoBehaviour
     {
         try
         {
-            playerPanes[id].UpdateFromPlayerVar(mgmt.playerVars[id]);
+          playerPanes[id].UpdateFromPlayerVar(mgmt.playerVars[id]);
         }
         catch (System.ArgumentOutOfRangeException e)
         {

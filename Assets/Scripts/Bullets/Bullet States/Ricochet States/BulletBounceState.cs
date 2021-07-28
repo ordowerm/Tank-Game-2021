@@ -14,7 +14,7 @@ public class BulletBounceState : BulletState
     public override void OnEnter()
     {
         base.OnEnter();
-        ((BulletSM)sm).SetHitboxActive(false); //remove collider
+        //((BulletSM)sm).SetHitboxActive(false); //remove collider
         fadeTimer = ((BulletSM)sm).bdata.ricochetTime;
         rb.velocity = ((BulletSM)sm).GetInitialDirection();
         rb.velocity *= ((BulletSM)sm).bdata.speed;

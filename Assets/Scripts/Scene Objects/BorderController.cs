@@ -135,6 +135,21 @@ public class BorderController : MonoBehaviour
 
     }
 
+    //Returns an array containing the minimum x, minimum y, maximum x, and maximum y values, respectively, in world space.
+    public float[] GetBounds()
+    {
+        if (Walls.Length < 4)
+        {
+            Debug.LogError("In BorderController.GetBounds(): Wall array has length < 4.");
+            return new float[] { 0, 0, 0, 0 };
+        }
+        else
+        {
+            return new float[] { Walls[(int)Dirs.West].Wall.transform.position.x-colliderThickness/2.0f, Walls[(int)Dirs.South].Wall.transform.position.y - colliderThickness / 2.0f, Walls[(int)Dirs.East].Wall.transform.position.x + colliderThickness / 2.0f, Walls[(int)Dirs.North].Wall.transform.position.y + -colliderThickness / 2.0f };
+        }
+    }
+
+
     //Set scene camera and resize colliders
     public void SetSceneCamera(Camera c)
     {

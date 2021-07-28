@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f3c4ddbe8706e8479e9e38dc32f714c, type: 3}
+  m_Name: Discrete Sine
+  m_EditorClassIdentifier: 
+  values:
+  - 0
+  - 0.19509032
+  - 0.38268343
+  - 0.55557024
+  - 0.70710677
+  - 0.8314696
+  - 0.9238795
+  - 0.98078525
+  - 1
+  - 0.98078525
+  - 0.9238795
+  - 0.8314696
+  - 0.70710677
+  - 0.55557024
+  - 0.38268343
+  - 0.19509032
+  - 0
+  - -0.19509032
+  - -0.38268343
+  - -0.55557024
+  - -0.70710677
+  - -0.8314696
+  - -0.9238795
+  - -0.98078525
+  - -1
+  - -0.98078525
+  - -0.9238795
+  - -0.8314696
+  - -0.70710677
+  - -0.55557024
+  - -0.38268343
+  - -0.19509032

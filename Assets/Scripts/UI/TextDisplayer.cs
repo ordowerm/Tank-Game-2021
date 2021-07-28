@@ -26,7 +26,6 @@ public class TextDisplayer : MonoBehaviour
     public GameObject[] listeners;
     float delay; //current delay between calls to AppendCharactersToBuffer
     bool coroutineRunning = false; //flag denoting that the text displayer should stop trying to add new characters
-    bool initialized = false;
     int maxChars = 0; //max characters displayed in TextMeshProUGUI
 
     //Enumeration allowing for different presets of text speed

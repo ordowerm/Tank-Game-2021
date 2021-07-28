@@ -18,7 +18,7 @@ public class BulletHitState : BulletState
     public override void OnEnter()
     {
         base.OnEnter();
-        ((BulletSM)sm).SetHitboxActive(false);
+        //((BulletSM)sm).SetHitboxActive(false);
         fadeTimer = ((BulletSM)sm).bdata.destroyTime;
         rb.velocity = new Vector2(); //set velocity to zero
         //target.GetComponent<SpriteRenderer>().enabled = false; //replace with destroy timer

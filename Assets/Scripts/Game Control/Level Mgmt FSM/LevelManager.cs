@@ -25,8 +25,9 @@ public class LevelManager : GameStateMachine
     //Runtime Variables
     public bool sceneActive;
     public BorderController border;
-    int stageRegionNumber = 0; //index of currently-occupied area in the stage
-    int enemyWaveNumber = 0; //index of the current wave of enemies
+    protected int stageRegionNumber = 0; //index of currently-occupied area in the stage
+    protected int enemyWaveNumber = 0; //index of the current wave of enemies
+
 
     //FSM States
     public LevelMGMTPregameState pregameState;
@@ -64,7 +65,15 @@ public class LevelManager : GameStateMachine
 
         //Sets up the stage
         InstantiateUI();
-        levelUI.SpawnPlayerPanes(settings.playerVars);
+        playerVars = new PlayerVars[]
+        {
+            settings.playerVars[0],
+            settings.playerVars[1],
+            settings.playerVars[2],
+            settings.playerVars[3],
+
+        };
+        levelUI.SpawnPlayerPanes(playerVars);
         border.SetSceneCamera(levelUI.mainCamera); //send reference of scene camera to wall object
         SpawnPlayers();
 
@@ -78,6 +87,7 @@ public class LevelManager : GameStateMachine
     {
         uiMgmt = Instantiate(uiMgmtPrefab);
         levelUI = uiMgmt.GetComponent<LevelUIManager>();
+        levelUI.mgmt = this;
         levelUI.sceneMessage.levelManager = this; //pass reference to scene message manager
     }
 
@@ -136,9 +146,12 @@ public class LevelManager : GameStateMachine
         //If enemy count is down to 0, notify the current state that the enemy wave has ended
         if (enemyCount < 1)
         {
-            Debug.Log("Level manager: No enemies left");
-            enemyWaveNumber++;
-            ((LevelMgmtState)currentState).NotifyEnemyWaveCleared();
+            
+           
+                ((LevelMgmtState)currentState).NotifyEnemyWaveCleared();
+            
+        
+                        
         }
 
     }
@@ -146,10 +159,13 @@ public class LevelManager : GameStateMachine
     //The Stage Data defines various "regions" containing different enemy spawn behaviors. They're indexed by these methods:
     public void AdvanceRegion()
     {
-        enemyWaveNumber = 0;
+        enemyWaveNumber = 0; //enemyWave number resets
         stageRegionNumber++;
     }
-    
+    public void AdvanceWave()
+    {
+        enemyWaveNumber++;
+    }
     
 
     //Call when spawning a new enemy wave to display the number (+1, because humans usually count from 1)
@@ -176,30 +192,21 @@ public class LevelManager : GameStateMachine
         nsm.SetOrientation(en.orientation);
         nsm.SetIDNumber(idNo);
         nsm.levelManager = this;
-        nsm.data = en.edata;
+        //nsm.data = en.edata;
         enemyCount++;
         enemyList.Add(idNo, newEnemy);
+        nsm.Initialize(nsm.idle); //this might be necessary to get it moving
     }
 
-    
-    //Spawns a wave of enemies
-    public void SpawnEnemyWave() {
-       
-        try
-        {
-            foreach (EnemySpawnData en in stageData.regions[stageRegionNumber].waves[enemyWaveNumber%stageData.regions[stageRegionNumber].waves.Length].enemies)
-            {
-                SpawnEnemy(en);
-
-            }
-        }
-        catch (System.IndexOutOfRangeException)
-        {
-            Debug.LogError("Region number: " + stageRegionNumber);
-            Debug.LogError("Enemy Wave Number: " + enemyWaveNumber);
-        }
+    //Gets current enemy wave
+    public WaveList GetCurrentWave()
+    {
+        return stageData.regions[stageRegionNumber].waves[enemyWaveNumber% stageData.regions[stageRegionNumber].waves.Length];
     }
-    
+   
+
+
+
     //Gets the enemy list
     public Dictionary<int,GameObject> GetEnemyList()
     {
@@ -211,6 +218,7 @@ public class LevelManager : GameStateMachine
     //Methods for updating other variables
     public void IncrementPlayerScore(int playerId, int amt)
     {
+        //Debug.Log("LevelManager: updating player score: Player " + playerId + " , " + amt);
         try
         {
             playerVars[playerId].playerScore += amt;
@@ -251,6 +259,12 @@ public class LevelManager : GameStateMachine
         
     }
 
+
+    //Call this to get world coordinates of onscreen borders.
+    public float[] GetBorders()
+    {
+        return border.GetBounds();
+    }
 
 
 

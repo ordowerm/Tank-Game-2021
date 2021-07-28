@@ -276,7 +276,7 @@ public class PlayerAimState : PlayerState
     protected void ChangeHoldLockOnTarget()
     {
              
-            if (cont.GetLockOnType() == LockOnType.HOLD)
+            if (cont.GetLockOnType() == LockOnType.HOLD && enemyList.Count>0)
             {
 
                 lockId = (lockId + 1) % enemyList.Count;

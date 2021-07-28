@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class EnemyStateMachine : GameStateMachine
 {
     protected int id; //enemy id number assigned in LevelManager when spawning --> this is used to track which enemies have been spawned / which enemies are active
@@ -10,7 +11,9 @@ public class EnemyStateMachine : GameStateMachine
         RIGHT, LEFT 
     }
 
-    public void SetIDNumber(int i) { id = i; }
+    public void SetIDNumber(int i) { 
+        //Debug.Log("Id number ="+ i); 
+        id = i; }
     protected Rigidbody2D rb;
     public EnemyHitboxScript[] hitboxes;
     public Animator anim;
@@ -37,7 +40,6 @@ public class EnemyStateMachine : GameStateMachine
     public EnemyApproach approach;
     public EnemyAttack attack;
     public EnemyHitState hitState;
-    
 
     //VFX
     protected float ricochetTimer = 0;
@@ -50,14 +52,20 @@ public class EnemyStateMachine : GameStateMachine
     protected void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        CreateStates();
+        currentState = idle;
+        SetBodyMaterialColor(data.element.primary);
+        health = data.maxHp;
+    }
+
+    //In EnemyStateMachine subclasses derived from this, override the CreateStates() method to use constructors for specific subclasses of the dormant, idle, etc. states.
+    public virtual void CreateStates()
+    {
         dormant = new EnemyDormant(this.gameObject, this);
         idle = new EnemyIdle(gameObject, this);
         approach = new EnemyApproach(gameObject, this);
         attack = new EnemyAttack(gameObject, this);
         hitState = new EnemyHitState(gameObject, this);
-        currentState = idle;
-        SetBodyMaterialColor(data.element.primary);
-        health = data.maxHp;
     }
 
   
@@ -75,12 +83,14 @@ public class EnemyStateMachine : GameStateMachine
 
     protected void OnDestroy()
     {
+        /*
         //Ensures that the reticle object won't be destroyed along with this.gameObject
         if (reticle)
         {
             reticle.transform.parent = null;
         }
         levelManager.NotifyEnemyDestroyed(this.id);
+        */
     }
 
     //Call when reticle locks on
@@ -95,12 +105,34 @@ public class EnemyStateMachine : GameStateMachine
 
 
     //Called by the hitboxes when they collide with damaging objects
-    public void NotifyHit(int damage)
+    public void NotifyHit(BulletSM bsm)
     {
-        health -= damage;
-        if (!(currentState is EnemyHitState)) //ignore hit if you're already in a hit state
+        health -= bsm.bdata.power;
+        
+        //Update score
+        if (health <= 0)
         {
+            UpdateScore(bsm.sourcePlayerId, data.scoreForDestroyed);
+            //Ensures that the reticle object won't be destroyed along with this.gameObject
+            if (reticle)
+            {
+                reticle.transform.parent = null;
+            }
+            levelManager.NotifyEnemyDestroyed(this.id);
+            ActivateHitboxes(false);
+        }
+        else
+        {
+            UpdateScore(bsm.sourcePlayerId, data.scoreForHit);
+        }
+
+        //Start hit state
+        if (!(currentState is EnemyHitState)) //ignore hit state if you're already in a hit state
+        {
+            
+
             ChangeState(hitState);
+
         }
     }
     //Called by the hitboxes when they collide with a resisted bullet
@@ -151,7 +183,7 @@ public class EnemyStateMachine : GameStateMachine
     //This animates the enemy receiving damage
     public void DamageShader(bool active, float prop)
     {
-        //Debug.Log("Damage shader: " + active + prop);
+       // Debug.Log("Damage shader: " + active + prop);
         if (active)
         {
             foreach (SpriteRenderer spr in sprites)
@@ -176,7 +208,7 @@ public class EnemyStateMachine : GameStateMachine
     //This animates the enemy resisting damage
     public void ResistShader(bool active, float prop)
     {
-        //Debug.Log("Damage shader: " + active + prop);
+        //Debug.Log("Resist shader: " + active + prop);
         if (active)
         {
             foreach (SpriteRenderer spr in sprites)
@@ -226,10 +258,62 @@ public class EnemyStateMachine : GameStateMachine
     }
 
     //Spawns an instance of the explosion prefab
+    /*
+     Something to consider, as of 7/19/21:
+     As currently constructed, we have to manually set the explosion prefab. We could, alternatively, programmatically generate it.
+     */
     public void SpawnExplosion()
     {
+               
         GameObject explosion = Instantiate(explosionPrefab);
         explosion.transform.position = transform.position;
         explosion.GetComponent<EnemyExplosionScript>().SetColorAndStart(data);
     }
+
+
+    //Call in EnemyStates to check if the enemy is offscreen
+    /*
+     Returns a Vector2 result with the following values:
+            x can be -1, 0, or 1, denoting whether the gameObject transform position is left, inside, or right, respectively of the Camera rectangle, in world space.
+            y can be -1, 0, or 1, denoting whether the gameObject transform position is below, inside, or above the camera rectangle, in world space.
+
+
+      Note: as of 7/18/21, this doesn't factor in sprite size, which means this only checks whether the origin of this gameObject is outside of the boundary walls.
+     */
+     public Vector2 CheckOnscreen()
+    {
+        Vector2 result = new Vector2(0, 0);
+        float[] bounds = levelManager.GetBorders(); //returns min x, min y, max x, and max y coordinates, respectively
+        
+        //Set flag for x
+        if (transform.position.x < bounds[0])
+        {
+            result.x = -1;
+        }
+        else if (transform.position.x > bounds[2])
+        {
+            result.x = 1;
+        }
+
+        //Set flag for y
+        if (transform.position.y < bounds[1])
+        {
+            result.y = -1;
+        }
+        else if (transform.position.y > bounds[3])
+        {
+            result.y = 1;
+        }
+
+        return result;
+    }
+
+
+    //This sends a message to the LevelManager to update the score
+    public void UpdateScore(int playerId, int points)
+    {
+        levelManager.IncrementPlayerScore(playerId, points);
+    }
+    
+
 }

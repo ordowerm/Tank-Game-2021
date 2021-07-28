@@ -20,7 +20,6 @@ public class ColorList : ScriptableObject
     }
 
 
-    [SerializeField]
     public KeyColorPair[] pairs;
 
 

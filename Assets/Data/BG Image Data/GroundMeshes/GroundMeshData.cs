@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName ="Ground Mesh Data",menuName ="Game Data/Ground Mesh")]
+[CreateAssetMenu(fileName ="Ground Mesh Data",menuName ="GameData/Ground Mesh")]
 public class GroundMeshData : ScriptableObject
 {
     public QuadData[] quads;

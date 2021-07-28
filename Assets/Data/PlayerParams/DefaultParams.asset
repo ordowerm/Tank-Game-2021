@@ -59,8 +59,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   rolldelay: 0.1
   maxAngleError: 30
-  maxEnemyDistanceForLockOn: 15
+  maxEnemyDistanceForLockOn: 30
   lockOnCancelTime: 0
   lockOnResetTime: 0.15
   aimingHeuristicAngleErrorWeight: 0.06666667
-  aimingHeuristicEnemyDistanceWeight: 0.1
+  aimingHeuristicEnemyDistanceWeight: 0.5

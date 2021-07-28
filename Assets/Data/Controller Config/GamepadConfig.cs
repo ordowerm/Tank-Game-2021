@@ -13,6 +13,7 @@ using UnityEngine;
 public class GamepadConfig : ScriptableObject, IControllerInput
 {
     public bool debug;
+    public bool isRuntimeScriptableObject; //if this is marked as true, then the values of these variables can be overwritten during runtime.
     public KeyCode roll;
     public KeyCode switchWeaponRight;
     public KeyCode switchWeaponLeft;
@@ -45,6 +46,10 @@ public class GamepadConfig : ScriptableObject, IControllerInput
     public KeyCode weapon1;
     public KeyCode weapon2;
     public KeyCode weapon3;
+
+    //UI stuff
+    public KeyCode menuConfirmButton;
+    public KeyCode menuCancelButton;
 
     //Return normalized aiming vector. Use arctan to convert to angle when calculating aiming direction.
     public Vector2 GetAim()
@@ -207,6 +212,12 @@ public class GamepadConfig : ScriptableObject, IControllerInput
             case ButtonID.WEAPON3:
                 key = weapon3;
                 break;
+            case ButtonID.MENU_CONFIRM:
+                key = menuConfirmButton;
+                break;
+            case ButtonID.MENU_CANCEL:
+                key = menuCancelButton;
+                break;
 
         }
         if (!result) { result = bf(key); } //if the result is still false (i.e. trigger input hasn't been converted to button input), then check key
@@ -242,4 +253,8 @@ public class GamepadConfig : ScriptableObject, IControllerInput
     {
         return lockType;
     }
+
+    
+
+
 }

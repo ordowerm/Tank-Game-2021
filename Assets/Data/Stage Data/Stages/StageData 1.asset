@@ -21,8 +21,16 @@ MonoBehaviour:
       width: 5
       height: 5
     waves:
-    - {fileID: 11400000, guid: 0e9c83e3a4f80d446a81fc692fd3d374, type: 2}
-    - {fileID: 11400000, guid: d2a71717656b48f48be5a543a04d1c20, type: 2}
+    - subwaves:
+      - {fileID: 11400000, guid: 0e9c83e3a4f80d446a81fc692fd3d374, type: 2}
+    - subwaves:
+      - {fileID: 11400000, guid: 0e9c83e3a4f80d446a81fc692fd3d374, type: 2}
+      - {fileID: 11400000, guid: d2a71717656b48f48be5a543a04d1c20, type: 2}
+      - {fileID: 11400000, guid: 2b3f12a70f4a4a04a9d9dafe11f070b9, type: 2}
+    - subwaves:
+      - {fileID: 11400000, guid: 18cb739c34f4dd74d9c54d08e3c9d12f, type: 2}
+      - {fileID: 11400000, guid: 208fd8f1acde4974cb41a8e9f86b9d28, type: 2}
+      - {fileID: 11400000, guid: 18cb739c34f4dd74d9c54d08e3c9d12f, type: 2}
     playerSpawnLocations:
     - {x: 0, y: 0}
     - {x: 0, y: 0}
