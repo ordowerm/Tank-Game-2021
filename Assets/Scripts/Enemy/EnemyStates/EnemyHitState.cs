@@ -11,7 +11,7 @@ public class EnemyHitState : EnemyState
 
     public EnemyHitState(GameObject t, GameStateMachine s) : base(t, s)
     {
-       rb = target.GetComponent<Rigidbody2D>();
+       rb = _target.GetComponent<Rigidbody2D>();
     }
 
     public override void OnEnter()
@@ -20,7 +20,7 @@ public class EnemyHitState : EnemyState
         iFrameTimer = 0;
         storedVelocity = rb.velocity;
         rb.velocity *= 0;
-        ((EnemyStateMachine)sm).SetAnimatorTimeScale(0);
+        ((EnemyStateMachine)_sm).SetAnimatorTimeScale(0);
     }
 
     public override void OnExit()
@@ -28,7 +28,7 @@ public class EnemyHitState : EnemyState
         base.OnExit();
         iFrameTimer = 0;
         Animate(false);
-        ((EnemyStateMachine)sm).SetAnimatorTimeScale(1); //continue animation
+        ((EnemyStateMachine)_sm).SetAnimatorTimeScale(1); //continue animation
         rb.velocity = storedVelocity; //return enemy to previous velocity
     }
 
@@ -38,16 +38,16 @@ public class EnemyHitState : EnemyState
         iFrameTimer += Time.deltaTime;
         Animate(true);
         //Debug.Log(iFrameTimer);
-        if (iFrameTimer> ((EnemyStateMachine)sm).data.iFrameTime)
+        if (iFrameTimer> ((EnemyStateMachine)_sm).data.iFrameTime)
         {
-            if (((EnemyStateMachine)sm).GetHP() > 0)
+            if (((EnemyStateMachine)_sm).GetHP() > 0)
             {
-                ((EnemyStateMachine)sm).ChangePrevious();
+                ((EnemyStateMachine)_sm).ChangePrevious();
             }
             else
             {
-                ((EnemyStateMachine)sm).SpawnExplosion();
-                GameObject.Destroy(sm.gameObject);
+                ((EnemyStateMachine)_sm).SpawnExplosion();
+                GameObject.Destroy(_sm.gameObject);
 
             }
         }
@@ -56,8 +56,8 @@ public class EnemyHitState : EnemyState
     //Animates the color shifting for each of the sprites
     protected void Animate(bool val)
     {
-        float prop = Mathf.Sin(Mathf.PI * (iFrameTimer / ((EnemyStateMachine)sm).data.iFrameTime)); //reminder: sin(0) = 0, sin(pi) = 0, sin(pi/2) = 1.
-        ((EnemyStateMachine)sm).DamageShader(val, prop);
+        float prop = Mathf.Sin(Mathf.PI * (iFrameTimer / ((EnemyStateMachine)_sm).data.iFrameTime)); //reminder: sin(0) = 0, sin(pi) = 0, sin(pi/2) = 1.
+        ((EnemyStateMachine)_sm).DamageShader(val, prop);
     }
 
 }

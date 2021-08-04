@@ -23,13 +23,13 @@ public class PlayerAimState : PlayerState
     protected float lockOnResetLimit;
     protected int lastLockOnPressed=0;
 
-    //constructor takes target game object, state machine running it, controller configuration, and arm gameobject for aiming
+    //constructor takes _target game object, state machine running it, controller configuration, and arm gameobject for aiming
     public PlayerAimState(GameObject t, PlayerSM playerSM, IControllerInput c, GameObject a, GameObject g) : base(t, playerSM,c)
     {
-        this.target = t;
-        //Debug.Log("In stand state: " + target);
-        this.sm = playerSM;
-        rb = target.GetComponent<Rigidbody2D>();
+        this._target = t;
+        //Debug.Log("In stand state: " + _target);
+        this._sm = playerSM;
+        rb = _target.GetComponent<Rigidbody2D>();
         arm = a;
         gun = g;
         enemyList = new List<GameObject>();
@@ -42,25 +42,25 @@ public class PlayerAimState : PlayerState
     public override void OnEnter()
     {
         base.OnEnter();
-        rolltimer = ((PlayerSM)sm).GetRollTimer();
-        lockedOn = ((PlayerSM)sm).GetLockedOn();
+        rolltimer = ((PlayerSM)_sm).GetRollTimer();
+        lockedOn = ((PlayerSM)_sm).GetLockedOn();
         
         //Get Lockon Parameters
-        enemyList = ((PlayerSM)sm).GetLockOnList();
-        lockId = ((PlayerSM)sm).GetLockOnId();
-        lockTimer = ((PlayerSM)sm).GetLockTimer();
-        lockResetTimer = ((PlayerSM)sm).GetLockOnResetTimer();
-        lastLockOnPressed = ((PlayerSM)sm).GetLastLockOnPressed();
+        enemyList = ((PlayerSM)_sm).GetLockOnList();
+        lockId = ((PlayerSM)_sm).GetLockOnId();
+        lockTimer = ((PlayerSM)_sm).GetLockTimer();
+        lockResetTimer = ((PlayerSM)_sm).GetLockOnResetTimer();
+        lastLockOnPressed = ((PlayerSM)_sm).GetLastLockOnPressed();
     }
 
     public override void OnExit()
     {
         base.OnExit();
-        ((PlayerSM)sm).SetRollTimer(rolltimer);
-        ((PlayerSM)sm).SetLockedOn(lockedOn,enemyList,lockId);
-        ((PlayerSM)sm).SetLockTimer(lockTimer);
-        ((PlayerSM)sm).SetLockOnResetTimer(lockResetTimer);
-        ((PlayerSM)sm).SetLastLockOnPressed(lastLockOnPressed);
+        ((PlayerSM)_sm).SetRollTimer(rolltimer);
+        ((PlayerSM)_sm).SetLockedOn(lockedOn,enemyList,lockId);
+        ((PlayerSM)_sm).SetLockTimer(lockTimer);
+        ((PlayerSM)_sm).SetLockOnResetTimer(lockResetTimer);
+        ((PlayerSM)_sm).SetLastLockOnPressed(lastLockOnPressed);
     }
 
     //After calling Handle Input, 
@@ -106,7 +106,7 @@ public class PlayerAimState : PlayerState
                     if (enemyList[lockId])
                 {
                     arm.transform.rotation = Quaternion.Euler(0, 0, GetEnemyAngle(enemyList[lockId]));
-                    aimdir = new Vector2(enemyList[lockId].transform.position.x - target.transform.position.x, target.transform.position.y - enemyList[lockId].transform.position.y).normalized; //update stored aim direction so that cannon remains facing the enemy once lockon ends
+                    aimdir = new Vector2(enemyList[lockId].transform.position.x - _target.transform.position.x, _target.transform.position.y - enemyList[lockId].transform.position.y).normalized; //update stored aim direction so that cannon remains facing the enemy once lockon ends
 
                 }
                     else
@@ -169,14 +169,14 @@ public class PlayerAimState : PlayerState
     //gets distance between player and enemy
     protected float GetEnemyDistance(GameObject g)
     {
-        return (target.transform.position - g.transform.position).magnitude;
+        return (_target.transform.position - g.transform.position).magnitude;
     }
 
     //returns a priority score representing for a given enemy, re: which enemy to aim at first
     protected float EnemySortHeuristic(GameObject enemy)
     {
-        float distanceScore = GetEnemyDistance(enemy) * ((PlayerSM)sm).pparams.aimingHeuristicEnemyDistanceWeight;
-        float aimingScore = GetEnemyAngleError(enemy)* ((PlayerSM)sm).pparams.aimingHeuristicAngleErrorWeight;
+        float distanceScore = GetEnemyDistance(enemy) * ((PlayerSM)_sm).pparams.aimingHeuristicEnemyDistanceWeight;
+        float aimingScore = GetEnemyAngleError(enemy)* ((PlayerSM)_sm).pparams.aimingHeuristicAngleErrorWeight;
         float result= aimingScore-distanceScore;
         //Debug.Log("Heuristic score for " + enemy.name + ": " + result);
         return result;
@@ -191,8 +191,8 @@ public class PlayerAimState : PlayerState
          * However, if the enemy list is reconstructed, the index of the enemy we're locked onto,
          * in the enemyList array, might have changed.
          * If lockedOn is true, iterate through the new enemy list,
-         * and find the new lockon index of the target you're already locked onto.
-         * If no such index exists, then the enemy was destroyed, and you should lock onto a new target.
+         * and find the new lockon index of the _target you're already locked onto.
+         * If no such index exists, then the enemy was destroyed, and you should lock onto a new _target.
          */
 
         GameObject currentLockOnTarget=null;
@@ -200,14 +200,14 @@ public class PlayerAimState : PlayerState
         {
             currentLockOnTarget = enemyList[lockId];
         }
-        Dictionary<int, GameObject> candidates = ((PlayerSM)sm).levelManager.GetEnemyList();           
+        Dictionary<int, GameObject> candidates = ((PlayerSM)_sm).levelManager.GetEnemyList();           
         enemyList.Clear(); //reset enemy array
 
         //iterate through candidates and construct lock-on list, assuming they're within lock-on range
         foreach (KeyValuePair<int,GameObject> can in candidates)
         {
             //Check whether enemy candidate is within desired aiming range
-            bool withinAngleError = GetEnemyAngleError(can.Value) <= ((PlayerSM)sm).pparams.maxAngleError;
+            bool withinAngleError = GetEnemyAngleError(can.Value) <= ((PlayerSM)_sm).pparams.maxAngleError;
 
             //If using a switch lock-on type, let any enemy within firing distance be included, even if you're not aiming that direction.
             if (cont.GetLockOnType() == LockOnType.SWITCH)
@@ -218,7 +218,7 @@ public class PlayerAimState : PlayerState
             //populate list of enemies you can lock onto based on above criteria
             if (
                     withinAngleError &&
-                    GetEnemyDistance(can.Value) <= ((PlayerSM)sm).pparams.maxEnemyDistanceForLockOn
+                    GetEnemyDistance(can.Value) <= ((PlayerSM)_sm).pparams.maxEnemyDistanceForLockOn
                )
             {
                 enemyList.Add(can.Value);
@@ -226,7 +226,7 @@ public class PlayerAimState : PlayerState
 
         }
         
-        //Sort enemy list to determine best initial target
+        //Sort enemy list to determine best initial _target
         if (sort)
         {
             enemyList.Sort((IComparer<GameObject>)Comparer<GameObject>.Create((i1, i2) => this.EnemySortHeuristic(i2).CompareTo(this.EnemySortHeuristic(i1)))); //sort list, lowest score first
@@ -272,7 +272,7 @@ public class PlayerAimState : PlayerState
 
 
     //TODO
-    //Change target if on hold mode
+    //Change _target if on hold mode
     protected void ChangeHoldLockOnTarget()
     {
              
@@ -318,7 +318,7 @@ public class PlayerAimState : PlayerState
         //Run when locked on
         if (lockedOn)
         {
-            //Check for switching lock-on target
+            //Check for switching lock-on _target
             if (cont.GetLockOnType() == LockOnType.SWITCH)
             {
                 int change = cont.GetSwitchAxis(); //get status of "Change Target" button press
@@ -404,20 +404,20 @@ public class PlayerAimState : PlayerState
         //if roll is available and pressed, start rolling
         if (
             rollpress &&
-            rolltimer >= ((PlayerSM)sm).pparams.rolldelay &&
+            rolltimer >= ((PlayerSM)_sm).pparams.rolldelay &&
             movedir.magnitude > 0
             )
         {
             rolltimer = 0;
             gun.GetComponent<WeaponScript>().Unpress();
             rollpress = false; //reset roll button when changing state
-            ((PlayerSM)sm).SetLastPress(movedir); //feed into roll state
-            ((PlayerSM)sm).ChangeState(((PlayerSM)sm).rollState);
+            ((PlayerSM)_sm).SetLastPress(movedir); //feed into roll state
+            ((PlayerSM)_sm).ChangeState(((PlayerSM)_sm).rollState);
         }
         else
         {
             //update roll timer
-            rolltimer = Mathf.Min(((PlayerSM)sm).pparams.rolldelay, rolltimer + Time.deltaTime);
+            rolltimer = Mathf.Min(((PlayerSM)_sm).pparams.rolldelay, rolltimer + Time.deltaTime);
         }
     }
 

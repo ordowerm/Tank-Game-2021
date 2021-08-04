@@ -15,7 +15,7 @@ public class PlayerStandState : PlayerAimState
     {
         base.OnEnter();
         rb.velocity = new Vector2(0, 0);
-        ((PlayerSM)sm).SetAnimationState(PlayerSM.AnimationNumbers.STAND);
+        ((PlayerSM)_sm).SetAnimationState(PlayerSM.AnimationNumbers.STAND);
     }
 
     public override void HandleInput()
@@ -30,11 +30,11 @@ public class PlayerStandState : PlayerAimState
         {
             //if (!cont.GetButton(ButtonID.ROLL))
             //{
-                sm.ChangeState(((PlayerSM)sm).walkState);
+                _sm.ChangeState(((PlayerSM)_sm).walkState);
             //}
             //else
             //{
-               // sm.ChangeState(((PlayerSM)sm).rollState);
+               // _sm.ChangeState(((PlayerSM)_sm).rollState);
             //}
         }
         CheckRoll();

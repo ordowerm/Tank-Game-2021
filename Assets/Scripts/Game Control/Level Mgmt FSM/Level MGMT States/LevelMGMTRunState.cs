@@ -15,7 +15,7 @@ public class LevelMGMTRunState : LevelMgmtState
 
     public LevelMGMTRunState(GameObject t, GameStateMachine s) : base(t, s)
     {
-        gameTimer = ((LevelManager)(sm)).timeLimit;
+        gameTimer = ((LevelManager)(_sm)).timeLimit;
     }
 
     public override void NotifyEnemyWaveCleared()
@@ -54,7 +54,7 @@ public class LevelMGMTRunState : LevelMgmtState
     void SendEnemyWaveMessage()
     {
         
-            ((LevelManager)sm).SendUIMessages(new SceneOverlayMessage[]
+            ((LevelManager)_sm).SendUIMessages(new SceneOverlayMessage[]
             {
                 new SceneOverlayMessage("Enemies Approaching!",TextDisplayer.TextSpeed.FAST,0.7f),
                 new SceneOverlayMessage("Wave #"+lm().GetWaveNumber(),TextDisplayer.TextSpeed.FAST,0.7f)
@@ -125,12 +125,12 @@ public class LevelMGMTRunState : LevelMgmtState
         if (gameTimer > 0)
         {
             gameTimer -= Time.deltaTime;
-            ((LevelManager)(sm)).levelUI.SetTimerText(gameTimer);
+            ((LevelManager)(_sm)).levelUI.SetTimerText(gameTimer);
         }
         else
         {
             gameTimer = 0;
-            ((LevelManager)(sm)).levelUI.SetTimerText("Time\'s Up!");
+            ((LevelManager)(_sm)).levelUI.SetTimerText("Time\'s Up!");
         }
     }
 

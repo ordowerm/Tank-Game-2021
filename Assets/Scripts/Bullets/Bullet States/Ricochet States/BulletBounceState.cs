@@ -14,24 +14,24 @@ public class BulletBounceState : BulletState
     public override void OnEnter()
     {
         base.OnEnter();
-        //((BulletSM)sm).SetHitboxActive(false); //remove collider
-        fadeTimer = ((BulletSM)sm).bdata.ricochetTime;
-        rb.velocity = ((BulletSM)sm).GetInitialDirection();
-        rb.velocity *= ((BulletSM)sm).bdata.speed;
+        //((BulletSM)_sm).SetHitboxActive(false); //remove collider
+        fadeTimer = ((BulletSM)_sm).bdata.ricochetTime;
+        rb.velocity = ((BulletSM)_sm).GetInitialDirection();
+        rb.velocity *= ((BulletSM)_sm).bdata.speed;
 
         //Debug.Log("In BulletBounce OnEnter: " + rb.velocity);
-        //((BulletSM)sm).trail.enabled = false;
+        //((BulletSM)_sm).trail.enabled = false;
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
         fadeTimer = Mathf.Max(fadeTimer - Time.deltaTime, 0);
-        Color color = ((BulletSM)sm).sprite.color;
-        ((BulletSM)sm).sprite.color = new Color(color.r, color.g, color.b, fadeTimer / ((BulletSM)sm).bdata.ricochetTime);
+        Color color = ((BulletSM)_sm).sprite.color;
+        ((BulletSM)_sm).sprite.color = new Color(color.r, color.g, color.b, fadeTimer / ((BulletSM)_sm).bdata.ricochetTime);
         if (fadeTimer <= 0)
         {
-            ((BulletSM)sm).ChangeState(((BulletSM)sm).destState);
+            ((BulletSM)_sm).ChangeState(((BulletSM)_sm).destState);
         }
     }
 

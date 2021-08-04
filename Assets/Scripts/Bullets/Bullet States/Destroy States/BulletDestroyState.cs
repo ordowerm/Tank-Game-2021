@@ -17,7 +17,7 @@ public class BulletDestroyState : BulletState
     {
         base.OnExit();
         //Debug.Log("DESTRUCTION.");
-        GameObject.Destroy(target);
+        GameObject.Destroy(_target);
     }
 
     public override void LogicUpdate()

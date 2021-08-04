@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LevelMgmtState : GameState
 {
-    public LevelMgmtState(GameObject t, GameStateMachine s) : base(t, s)
+    public LevelMgmtState(GameObject t, GameStateMachine s) : base(ref t, ref s)
     {
     }
 
@@ -17,6 +17,6 @@ public class LevelMgmtState : GameState
     //Method just does a cast so that I don't have to type as much.
     public LevelManager lm()
     {
-        return ((LevelManager)sm);
+        return ((LevelManager)_sm);
     }
 }

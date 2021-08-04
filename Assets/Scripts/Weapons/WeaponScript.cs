@@ -179,12 +179,12 @@ public class WeaponScript : MonoBehaviour
     {
         if (t == null)
         {
-            Debug.Log("Setting null target");
+            Debug.Log("Setting null _target");
             ResetReticle();
             return;
         }
 
-        //if the target changes, notify the current target
+        //if the _target changes, notify the current _target
         if (reticle.transform.parent != null)
         {
             if (

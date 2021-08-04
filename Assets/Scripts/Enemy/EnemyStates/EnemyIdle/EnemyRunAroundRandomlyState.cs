@@ -108,11 +108,11 @@ public class EnemyRunAroundRandomlyState : EnemyIdle
     {
         //Debug.Log("In RunAroundRandomly OnEnter");
         base.OnEnter();
-        sm.StartCoroutine(DecisionChecker());
+        _sm.StartCoroutine(DecisionChecker());
     }
     public override void OnExit()
     {
-        sm.StopCoroutine(DecisionChecker());
+        _sm.StopCoroutine(DecisionChecker());
         base.OnExit();
 
     }

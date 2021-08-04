@@ -8,7 +8,7 @@ using UnityEngine;
  */
 public class RainbowColorizer : MonoBehaviour
 {
-    public float targtime; //how often target color updates
+    public float targtime; //how often _target color updates
     public float speed; //multiplier for color interpolation
     public float minV; //minimum V value for HSV
     public float maxV;

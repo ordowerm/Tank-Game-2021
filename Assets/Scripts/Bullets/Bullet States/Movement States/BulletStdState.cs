@@ -9,14 +9,14 @@ public class BulletStdState : BulletState
 
     public BulletStdState(GameObject t, GameStateMachine s, BulletData bdata) : base(t, s, bdata)
     {
-        rb = target.GetComponent<Rigidbody2D>();
+        rb = _target.GetComponent<Rigidbody2D>();
     }
 
 
     public override void OnEnter()
     {
         base.OnEnter();
-        rb.velocity = ((BulletSM)sm).GetInitialDirection();
+        rb.velocity = ((BulletSM)_sm).GetInitialDirection();
         rb.velocity *= bd.speed;
     }
     public override void PhysicsUpdate()

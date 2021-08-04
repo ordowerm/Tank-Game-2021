@@ -12,17 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fefc435b832d974c8f6de7115f01990, type: 3}
   m_Name: MenuColorPalette
   m_EditorClassIdentifier: 
-  DeveloperDescription: "Enum Values, in order: \nUNSELECTED, \nHIGHLIGHTED, \nSELECTED,
-    \nDISABLED_UNSELECTED,\nDISABLED_SELECTED"
   textColors:
   - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 0.10588236, g: 0.10980393, b: 0.10588236, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
   - {r: 0.10588236, g: 0.10980393, b: 0.10588236, a: 1}
   - {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
   - {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+  - {r: 0.10588236, g: 0.10980393, b: 0.10588236, a: 1}
   boxColors:
   - {r: 0.10588236, g: 0.10980393, b: 0.10588236, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0.10588236, g: 0.10980393, b: 0.10588236, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 0.10588236, g: 0.10980393, b: 0.10588236, a: 1}
   - {r: 0.6603774, g: 0.6603774, b: 0.6603774, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  arrowColors:
+  - {r: 0.10588236, g: 0.10980393, b: 0.10588236, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0.6603774, g: 0.6603774, b: 0.6603774, a: 1}
+  - {r: 0.10588236, g: 0.10980393, b: 0.10588236, a: 1}

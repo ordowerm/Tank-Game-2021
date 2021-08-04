@@ -9,7 +9,7 @@ public class SceneOverlayScrollCenterToRightState : SceneOverlayState
 
     public SceneOverlayScrollCenterToRightState(GameObject t, GameStateMachine s) : base(t, s)
     {
-        maxScrollTime = ((SceneOverlayMessageUIStateMachine)sm).scrollMaxtime;
+        maxScrollTime = ((SceneOverlayMessageUIStateMachine)_sm).scrollMaxtime;
     }
 
     public override void LogicUpdate()
@@ -39,7 +39,7 @@ public class SceneOverlayScrollCenterToRightState : SceneOverlayState
         rt().localPosition = new Vector3(tempWidth, 0, 0);
         if (timer >= maxScrollTime)
         {
-            ((SceneOverlayMessageUIStateMachine)sm).ChangeState((GameState)(((SceneOverlayMessageUIStateMachine)sm).inactiveState)); //change to next state 
+            ((SceneOverlayMessageUIStateMachine)_sm).ChangeState((GameState)(((SceneOverlayMessageUIStateMachine)_sm).inactiveState)); //change to next state 
 
         }
     }

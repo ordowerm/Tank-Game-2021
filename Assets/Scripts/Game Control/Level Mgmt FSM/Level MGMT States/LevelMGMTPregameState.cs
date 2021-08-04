@@ -12,7 +12,7 @@ public class LevelMGMTPregameState : LevelMgmtState
     {
      //   Debug.Log("Entering pregame state");
         base.OnEnter();
-        ((LevelManager)sm).SendUIMessages(new SceneOverlayMessage[3] {
+        ((LevelManager)_sm).SendUIMessages(new SceneOverlayMessage[3] {
             new SceneOverlayMessage("Ready?",TextDisplayer.TextSpeed.SKIP,1.3f),
             new SceneOverlayMessage("Set",TextDisplayer.TextSpeed.FAST,1f),
             new SceneOverlayMessage("Go!",TextDisplayer.TextSpeed.FAST,1f)

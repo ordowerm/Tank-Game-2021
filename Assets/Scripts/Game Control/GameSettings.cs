@@ -13,6 +13,7 @@ public class GameSettings
 {
     public PlayerVars[] playerVars;
     public bool accessibleMode; //turning this on causes the game to load alternate shaders for the color-impaired
+    public bool soundEnabled;
     public float sfxVolume; //master volume for sound effects
     public float musicVolume;
     public bool enableParticleEffects;

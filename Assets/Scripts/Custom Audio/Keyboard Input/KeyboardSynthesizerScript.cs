@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class KeyboardSynthesizerScript : MonoBehaviour
 {
-    public Oscillator target;
+    public PolyphonicOscillator target;
     public KeyCode[] keys;
     MusicNotes notes = new MusicNotes();
     int minimumNoteId = 51; //default note is C3
@@ -39,11 +39,16 @@ public class KeyboardSynthesizerScript : MonoBehaviour
     {
         foreach (float f in freqs)
         {
-            target.frequency = f;
-            target.amplitudeController.TriggerEnvelope();
+            target.PlayFrequency(f);
         }
     }
-
+    public void StopNotes(List<float> freqs)
+    {
+        foreach (float f in freqs)
+        {
+            target.FreeFrequency(f);
+        }
+    }
 
     //Sets default keys if keys[] has length == 0
     protected void SetDefaultKeys()
@@ -71,12 +76,8 @@ public class KeyboardSynthesizerScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GetFrequenciesUp().Count > 0)
-        {
-            target.amplitudeController.TriggerReleaseEnvelope();
-
-        }
-        PlayNotes(GetFrequenciesDown());
+       PlayNotes(GetFrequenciesDown());
+       StopNotes(GetFrequenciesUp());
       
     }
 

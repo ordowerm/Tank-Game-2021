@@ -18,12 +18,12 @@ public class PlayerRollState : PlayerState
 
     public PlayerRollState(GameObject t, PlayerSM playerSM, IControllerInput c):base(t, playerSM,c)
     {
-        this.target = t;
-        this.sm = playerSM;
+        this._target = t;
+        this._sm = playerSM;
         rb = t.GetComponent<Rigidbody2D>();
-        endtime = ((PlayerSM)sm).pparams.rolltime;
-        speed = ((PlayerSM)sm).pparams.rollspeed;
-        curve = ((PlayerSM)sm).pparams.rollcurve;
+        endtime = ((PlayerSM)_sm).pparams.rolltime;
+        speed = ((PlayerSM)_sm).pparams.rollspeed;
+        curve = ((PlayerSM)_sm).pparams.rollcurve;
     }
     
     
@@ -34,8 +34,8 @@ public class PlayerRollState : PlayerState
     {
         base.OnEnter();
         rolltimer = 0; //reset roll timer
-        initialDir = ((PlayerSM)sm).GetLastPress().normalized;
-        ((PlayerSM)sm).SetAnimationState(PlayerSM.AnimationNumbers.ROLL);
+        initialDir = ((PlayerSM)_sm).GetLastPress().normalized;
+        ((PlayerSM)_sm).SetAnimationState(PlayerSM.AnimationNumbers.ROLL);
         SpawnParticles(10);
     }
 
@@ -65,18 +65,18 @@ public class PlayerRollState : PlayerState
             Vector2 movedir = cont.GetAxis();
             if (movedir.magnitude > 0)
             {
-                ((PlayerSM)sm).ChangeState(((PlayerSM)sm).walkState);
+                ((PlayerSM)_sm).ChangeState(((PlayerSM)_sm).walkState);
             }
             else
             {
-                ((PlayerSM)sm).ChangeState(((PlayerSM)sm).standState);
+                ((PlayerSM)_sm).ChangeState(((PlayerSM)_sm).standState);
             }
         }
         else
         {
             //update animation
             rolltimer = Mathf.Min(endtime,rolltimer + Time.deltaTime);
-            ((PlayerSM)sm).SetAnimationTimer(GetAnimationTime(initialDir));
+            ((PlayerSM)_sm).SetAnimationTimer(GetAnimationTime(initialDir));
             
         }
 
@@ -95,7 +95,7 @@ public class PlayerRollState : PlayerState
     {
         base.OnExit();
         //rolltimer = 0;
-        ((PlayerSM)sm).SetRollTimer(0);
+        ((PlayerSM)_sm).SetRollTimer(0);
     }
     
 
@@ -110,7 +110,7 @@ public class PlayerRollState : PlayerState
             for (int i = 0; i < spawnNo; i++)
             {
                 GameObject instance = GameObject.Instantiate(particle);
-                instance.transform.position = target.transform.position + instance.GetComponent<SpriteParticle>().offset;
+                instance.transform.position = _target.transform.position + instance.GetComponent<SpriteParticle>().offset;
             }
             
         }

@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class LevelMGMTPostgameState : GameState
 {
-    public LevelMGMTPostgameState(GameObject t, GameStateMachine s) : base(t, s)
+    public LevelMGMTPostgameState(GameObject t, GameStateMachine s) : base(ref t,ref s)
     {
     }
 
     public override void OnEnter()
     {
         base.OnEnter();
-        ((LevelManager)sm).SendMessage("Game over!");
+        ((LevelManager)_sm).SendMessage("Game over!");
     }
 
     public override void OnExit()

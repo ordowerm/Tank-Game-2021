@@ -14,13 +14,13 @@ public class PlayerState : InputState
     public override void OnEnter()
     {
         base.OnEnter();
-        iFrameTimer = ((PlayerSM)sm).GetIFrameTimer();
+        iFrameTimer = ((PlayerSM)_sm).GetIFrameTimer();
     }
 
     public override void OnExit()
     {
         base.OnExit();
-        ((PlayerSM)sm).SetIFrameTimer(iFrameTimer);
+        ((PlayerSM)_sm).SetIFrameTimer(iFrameTimer);
     }
 
     public override void HandleInput()
@@ -55,9 +55,9 @@ public class PlayerState : InputState
 
         
 
-        if (w0) { ((PlayerSM)sm).SetWeapon(WeaponScript.WeaponName.WEAPON0); }
-        if (w1) { ((PlayerSM)sm).SetWeapon(WeaponScript.WeaponName.WEAPON1); }
-        if (w2) { ((PlayerSM)sm).SetWeapon(WeaponScript.WeaponName.WEAPON2); }
+        if (w0) { ((PlayerSM)_sm).SetWeapon(WeaponScript.WeaponName.WEAPON0); }
+        if (w1) { ((PlayerSM)_sm).SetWeapon(WeaponScript.WeaponName.WEAPON1); }
+        if (w2) { ((PlayerSM)_sm).SetWeapon(WeaponScript.WeaponName.WEAPON2); }
 
 
 

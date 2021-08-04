@@ -23,5 +23,19 @@ public class PlayerVars
     public Sprite hairSprite;
     public PlayerParameters playerParameters;
     public WeaponData weapondata;
+    public bool usingController;
     public IControllerInput cont;
+    public GamepadConfig gamepadInput;
+    public KeyConfig keyinput;
+    public IControllerInput Cont()
+    {
+        if (usingController)
+        {
+            return gamepadInput;
+        }
+        else
+        {
+            return keyinput;
+        }
+    }
  }

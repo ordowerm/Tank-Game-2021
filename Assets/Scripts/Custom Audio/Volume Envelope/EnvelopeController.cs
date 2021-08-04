@@ -9,15 +9,23 @@ using UnityEngine;
  */
 public class EnvelopeController : MonoBehaviour
 {
-    protected enum EnvelopeState { OFF, ATTACK, DECAY, SUSTAIN, RELEASE}
-    protected EnvelopeState eState;
-    public float attackTime;
-    public float decayTime;
-    public float sustainLevel;
-    public float releaseTime;
+    public enum EnvelopeState { OFF, ATTACK, DECAY, SUSTAIN, RELEASE}
+    public EnvelopeState eState;
+   
     protected float timer = 0;
     protected float returnLevel = 0;
     protected float releaseStartLevel = 0;
+
+    [System.Serializable]
+    public class EnvelopeParameters
+    {
+        public float attackTime;
+        public float decayTime;
+        public float sustainLevel;
+        public float releaseTime;
+    }
+
+    public EnvelopeParameters parameters;
 
     //begins the ADSR cycle
     public void TriggerEnvelope()
@@ -30,7 +38,7 @@ public class EnvelopeController : MonoBehaviour
     public void TriggerReleaseEnvelope()
     {
         eState = EnvelopeState.RELEASE;
-        timer = releaseTime-(returnLevel/sustainLevel)*releaseTime;
+        timer = parameters.releaseTime-(returnLevel/parameters.sustainLevel)*parameters.releaseTime;
     }
     
     //Obtains return value between 0 and 1, representing the value for the envelope
@@ -42,10 +50,10 @@ public class EnvelopeController : MonoBehaviour
     //Helper functions for each state
     protected virtual void GetAttackLevel()
     {
-        if (attackTime > 0)
+        if (parameters.attackTime > 0)
         {
-            returnLevel = Mathf.Lerp(0, 1, timer / attackTime);
-            if (timer >= attackTime)
+            returnLevel = Mathf.Lerp(0, 1, timer / parameters.attackTime);
+            if (timer >= parameters.attackTime)
             {
                 timer = 0;
                 eState = EnvelopeState.DECAY;
@@ -64,10 +72,10 @@ public class EnvelopeController : MonoBehaviour
     }
     protected virtual void GetDecayLevel()
     {
-        if (decayTime > 0)
+        if (parameters.decayTime > 0)
         {
-            returnLevel = Mathf.Lerp(1, sustainLevel, timer / decayTime);
-            if (timer >= decayTime)
+            returnLevel = Mathf.Lerp(1, parameters.sustainLevel, timer / parameters.decayTime);
+            if (timer >= parameters.decayTime)
             {
                 timer = 0;
                 eState = EnvelopeState.SUSTAIN;
@@ -79,22 +87,22 @@ public class EnvelopeController : MonoBehaviour
         }
         else
         {
-            returnLevel = sustainLevel;
+            returnLevel = parameters.sustainLevel;
             eState = EnvelopeState.SUSTAIN;
         }
        
     }
     protected virtual void GetSustainLevel() {
-        if (Mathf.Abs(sustainLevel) > 1) { sustainLevel = 1; } //Protection from bad user input
-        returnLevel = sustainLevel;
+        if (Mathf.Abs(parameters.sustainLevel) > 1) { parameters.sustainLevel = 1; } //Protection from bad user input
+        returnLevel = parameters.sustainLevel;
     }
     protected virtual void GetReleaseLevel()
     {
-        if (releaseTime > 0)
+        if (parameters.releaseTime > 0)
         {
 
-            returnLevel = Mathf.Lerp(sustainLevel, 0, timer / releaseTime);
-            if (timer >= releaseTime)
+            returnLevel = Mathf.Lerp(parameters.sustainLevel, 0, timer / parameters.releaseTime);
+            if (timer >= parameters.releaseTime)
             {
                 timer = 0;
                 returnLevel = 0;

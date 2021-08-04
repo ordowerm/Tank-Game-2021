@@ -11,23 +11,23 @@ public class BulletState : GameState
     protected Rigidbody2D rb;
     protected float timer;
 
-    public BulletState(GameObject t, GameStateMachine s, BulletData bdata) : base(t, s)
+    public BulletState(GameObject t, GameStateMachine s, BulletData bdata) : base(ref t, ref s)
     {
         bd = bdata;
         timer = 0;
-        rb = ((BulletSM)sm).rb;
+        rb = ((BulletSM)_sm).rb;
     }
 
     public override void OnEnter()
     {
         base.OnEnter();
-        timer = ((BulletSM)sm).GetTimer();
+        timer = ((BulletSM)_sm).GetTimer();
     }
 
     public override void OnExit()
     {
         base.OnExit();
-        ((BulletSM)sm).SetTimer(timer);
+        ((BulletSM)_sm).SetTimer(timer);
     }
 
     public override void LogicUpdate()
@@ -37,7 +37,7 @@ public class BulletState : GameState
         //If at end of lifespan, switch to the destroy state
         if (timer > bd.lifespan)
         {
-            ((BulletSM)sm).ChangeState(((BulletSM)sm).destState);
+            ((BulletSM)_sm).ChangeState(((BulletSM)_sm).destState);
             return;
         }
     }

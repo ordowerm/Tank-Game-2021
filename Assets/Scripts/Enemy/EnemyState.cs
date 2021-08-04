@@ -7,16 +7,16 @@ public class EnemyState : GameState
 {
 
 
-    public EnemyState(GameObject t, GameStateMachine s) : base(t, s)
+    public EnemyState(GameObject t, GameStateMachine s) : base(ref t, ref s)
     {
-        target = t;
-        sm = s;
+        _target = t;
+        _sm = s;
 
     }
 
     //used so that I don't have to manually type out every time I cast.
     protected EnemyStateMachine esm()
     {
-        return (EnemyStateMachine)sm;
+        return (EnemyStateMachine)_sm;
     }
 }

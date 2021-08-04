@@ -23,10 +23,10 @@ public class SceneOverlayInactiveState : SceneOverlayState
         //Debug.Log("SceneOverlay: inactive: onEnter");
         base.OnEnter();
         rt().localPosition = new Vector3(-size().x / 2.0f - 50, 0); //assumes anchors and pivots = 0.5, 0.5, 0.5, 0.5, along with reference resolution = 100x100
-        ((SceneOverlayMessageUIStateMachine)sm).textDisplayer.text.text = "";
-        while (((SceneOverlayMessageUIStateMachine)sm).messageQueue.Count > 0) //clear message queue
+        ((SceneOverlayMessageUIStateMachine)_sm).textDisplayer.text.text = "";
+        while (((SceneOverlayMessageUIStateMachine)_sm).messageQueue.Count > 0) //clear message queue
         {
-            ((SceneOverlayMessageUIStateMachine)sm).messageQueue.Dequeue();
+            ((SceneOverlayMessageUIStateMachine)_sm).messageQueue.Dequeue();
         }
     }
 

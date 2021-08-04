@@ -20,7 +20,7 @@ public class SceneOverlayStateRenderTextState : SceneOverlayState
         rt().localPosition = new Vector2(0, 0); //moves to center of Canvas
         
         //Start displaying message
-        if (((SceneOverlayMessageUIStateMachine)sm).messageQueue.Count > 0)
+        if (((SceneOverlayMessageUIStateMachine)_sm).messageQueue.Count > 0)
         {
             SendOverlayMessage();
         }

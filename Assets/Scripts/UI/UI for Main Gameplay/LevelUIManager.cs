@@ -7,7 +7,7 @@ using UnityEngine.UI;
  This script should be placed in the Game UI prefab present in each level of "real" gameplay (as opposed to the title screen, etc.)
 
     It performs the following tasks:
-    - runs a coroutine that arranges the cameras on screen to match a target aspect ratio. It also applies letterboxing
+    - runs a coroutine that arranges the cameras on screen to match a _target aspect ratio. It also applies letterboxing
     - controls an animation in which the HUD slides offscreen, and a pane for displaying in-game dialogue appears
     - contains methods, to be called from the scene's LevelManager script, that in turn update the UI displayed in the HUD
  
@@ -21,7 +21,7 @@ public class LevelUIManager : MonoBehaviour
     public float topPaneHeight; //proportion of screen covered by the top UI panel
     public float mainCameraHeight; //proportion of screen covered by the main game, when the message panel is not visible 
     public float messageCamHeight; //for displaying text on bottom of screen
-    public float targetAspect; //target aspect ratio --> UI is designed to match 1:1, so it might be a good idea to stick to this
+    public float targetAspect; //_target aspect ratio --> UI is designed to match 1:1, so it might be a good idea to stick to this
 
     //References to individual cameras
     public Camera windowCamera; //To force a fixed aspect ratio, we have a camera covering the whole screen with a solid black color skybox. This is used for letterboxing.

@@ -11,7 +11,7 @@ public class SceneCameraScaler : MonoBehaviour
 {
     public Camera mainCam; //reference to the default main camera in the scene
     public Camera sceneCam; //reference to this script's gameObject's Camera component
-    public float targetAspect; //target aspect ratio --> UI is designed to match 1:1
+    public float targetAspect; //_target aspect ratio --> UI is designed to match 1:1
     float  screenAspect;
 
 

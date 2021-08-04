@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class GameState
 {
-    protected GameObject target; //character or actor modified by the state
-    protected GameStateMachine sm; //state machine
+    protected GameObject _target; //character or actor modified by the state
+    protected GameStateMachine _sm; //state machine
 
-    public GameState(GameObject t, GameStateMachine s) {
-        target = t;
-        sm = s;
+    public GameState(ref GameObject t, ref GameStateMachine s) {
+        _target = t;
+        _sm = s;
    
     }
 

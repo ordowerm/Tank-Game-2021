@@ -5,16 +5,15 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="MenuColorPalette",menuName="ColorData/MenuColorList")]
 public class MenuColorList : ScriptableObject
 {
-    #if UNITY_EDITOR
-        [Multiline]
-        public string DeveloperDescription = "Enum Values, in order:  UNSELECTED, HIGHLIGHTED, SELECTED, DISABLED";
-    #endif
-
-
     public Color[] textColors;
     public Color[] boxColors;
+    public Color[] arrowColors;
 
-
+    public Color whiteShade;
+    public Color blackShade;
+    public Color lightGrayShade;
+    public Color darkGrayShade;
+   
     public Color GetTextColor(MenuStatus s)
     {
         try
@@ -32,6 +31,18 @@ public class MenuColorList : ScriptableObject
         try
         {
             return boxColors[(int)s];
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError(e);
+        }
+        return Color.white;
+    }
+    public Color GetArrowColor(MenuStatus s)
+    {
+        try
+        {
+            return arrowColors[(int)s];
         }
         catch (System.Exception e)
         {

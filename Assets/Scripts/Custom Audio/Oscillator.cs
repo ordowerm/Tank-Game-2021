@@ -13,7 +13,7 @@ using UnityEngine;
  */
 public class Oscillator : MonoBehaviour
 {
-    public double frequency = 440.0;
+    public double base_frequency = 440.0;
     protected double increment;
     protected double phase;
     protected double sampling_frequency = 48000.0;
@@ -24,6 +24,13 @@ public class Oscillator : MonoBehaviour
     //Reference to other Controllers
     public EnvelopeController amplitudeController;
 
+    public float frequency_offset=0; //offset in cents
+
+    protected double GetPlaybackFrequency()
+    {
+        if (frequency_offset == 0) { return base_frequency; }
+        return base_frequency * Mathf.Pow(2.0f, frequency_offset / 1200f);
+    }
 
     //Returns a sine wave by default. Override in children functions
     protected virtual float GetWaveValue(float p)
@@ -34,7 +41,7 @@ public class Oscillator : MonoBehaviour
 
     protected void OnAudioFilterRead(float[] data, int channels)
     {
-        increment = frequency * 2.0 * Mathf.PI / sampling_frequency;
+        increment = GetPlaybackFrequency() * 2.0 * Mathf.PI / sampling_frequency;
     
         for (int i= 0; i<data.Length; i+= channels)
         {

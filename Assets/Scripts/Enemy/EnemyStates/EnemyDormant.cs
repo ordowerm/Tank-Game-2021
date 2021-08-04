@@ -18,11 +18,11 @@ public class EnemyDormant : EnemyState
     public override void OnEnter()
     {
         base.OnEnter();
-        ((EnemyStateMachine)sm).ActivateHitboxes(false);
+        ((EnemyStateMachine)_sm).ActivateHitboxes(false);
     }
     public override void OnExit()
     {
         base.OnExit();
-        ((EnemyStateMachine)sm).ActivateHitboxes(true);
+        ((EnemyStateMachine)_sm).ActivateHitboxes(true);
     }
 }
